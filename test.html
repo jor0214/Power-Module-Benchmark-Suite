@@ -186,10 +186,23 @@
     width: 100%; display: flex; justify-content: space-between; align-items: center;
     padding: 12px 18px; background: none; border: none; cursor: pointer;
     font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em;
-    text-transform: uppercase; color: var(--text-dim); transition: color 0.15s;
+    text-transform: uppercase; color: var(--text); transition: color 0.15s;
   }
-  .dropdown-trigger:hover { color: var(--text); }
-  .dropdown-trigger.open { color: var(--cyan); }
+  .dropdown-trigger:hover { opacity: 0.8; }
+  .dropdown-trigger.open { opacity: 1; }
+  .dropdown-trigger[data-type="schematic"] { color: #a78bfa; }
+  .dropdown-trigger[data-type="layout"] { color: #34d399; }
+  .dropdown-trigger[data-type="thermal"] { color: #facc15; }
+  .dropdown-trigger[data-type="electrical"] { color: #f472b6; }
+
+  /* DATA TABLES */
+  .data-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+  .data-table tr { border-bottom: 1px solid var(--border); }
+  .data-table tr:last-child { border-bottom: none; }
+  .data-table td { padding: 8px 4px; font-size: 12px; font-family: 'JetBrains Mono', monospace; }
+  .data-table td:first-child { color: var(--text-dim); }
+  .data-table td:last-child { color: var(--cyan); text-align: right; font-weight: 600; }
+  .data-table .section-header td { color: var(--text-muted); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding-top: 12px; }
   .dropdown-arrow { font-size: 9px; transition: transform 0.2s; }
   .dropdown-trigger.open .dropdown-arrow { transform: rotate(180deg); }
   .dropdown-content { display: none; padding: 12px 18px 18px; }
@@ -231,7 +244,7 @@
   .thermal-scale-info h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
   .thermal-scale-info p { font-size: 13px; color: var(--text-dim); max-width: 340px; line-height: 1.6; }
   .thermal-scale-img {
-    flex: 1; min-width: 280px; max-width: 500px;
+    width: 160px; flex-shrink: 0;
     border-radius: 8px; border: 1px solid var(--border); background: var(--bg3);
     overflow: hidden;
   }
@@ -545,7 +558,9 @@ const cases = [
     imgFolder: "Thesis Images (Benchmarks)/Pictures_E",
     top: "PM1000_E_TOP.png", front: "PM1000_E_FRONT.png", angle: "PM1000_E_ANGLE.png",
     schematic: "schematic_E.png", layout: "layout_E.png",
-    thermal_img: "Thermal_commonscale/E.png"
+    thermal_img: "Thermal_commonscale/E.png",
+    rth: "0.191 K/W", tu1: "21.91°C", tu2: "21.91°C", rthu1: "0.191 K/W", rthu2: "0.191 K/W",
+    lac: "11.48 nH", rac: "18.4 mΩ", cdcp: "178.52 pF", cac: "180.07 pF", utilisation: "9%"
   },
   {
     num: "CASE 02", tag: "Baseline & Refinement", tagClass: "tag-blue",
@@ -556,10 +571,8 @@ const cases = [
     imgFolder: "Thesis Images (Benchmarks)/Pictures_M",
     top: "PM1000_M_TOP.png", front: "PM1000_M_FRONT.png", angle: "PM1000_M_ANGLE.png",
     schematic: "schematic_M.png", layout: "layout_M.png",
-    thermal_img: "Thermal_commonscale/M.png"
-  },
-  {
-    num: "CASE 03", tag: "Baseline & Refinement", tagClass: "tag-blue",
+    thermal_img: "Thermal_commonscale/M.png",
+    rth: "0.192 K/W", tu1: "— °C", tu2: "— °C", rthu1: "— K/W", rthu2: "— K/W", lac: "10.17 nH", rac: "— mΩ", cdcp: "— pF", cac: "— pF", utilisation: "— %", tag: "Baseline & Refinement", tagClass: "tag-blue",
     title: "Advanced refined copper — 1 die",
     desc: "Advanced refinement copper geometry on a single die. Field cancellation, close forward/return path placement and minimal loop area.",
     inductance: "6.01 nH", thermal: "0.192 K/W",
@@ -567,7 +580,8 @@ const cases = [
     imgFolder: "Thesis Images (Benchmarks)/Pictures_D",
     top: "PM1000_D_TOP.png", front: "PM1000_D_FRONT.png", angle: "PM1000_D_ANGLE.png",
     schematic: "schematic_D.png", layout: "layout_D.png",
-    thermal_img: "Thermal_commonscale/D.png"
+    thermal_img: "Thermal_commonscale/D.png",
+    rth: "0.192 K/W", tu1: "— °C", tu2: "— °C", rthu1: "— K/W", rthu2: "— K/W", lac: "6.01 nH", rac: "— mΩ", cdcp: "— pF", cdcn: "— pF", cac: "— pF", utilisation: "— %"
   },
   {
     num: "CASE 04", tag: "Parallel Devices", tagClass: "tag-green",
@@ -578,7 +592,8 @@ const cases = [
     imgFolder: "Thesis Images (Benchmarks)/Pictures_E_2P",
     top: "PM1000_E_2P_TOP.png", front: "PM1000_E_2P_FRONT.png", angle: "PM1000_E_2P_ANGLE.png",
     schematic: "schematic_E_2P.png", layout: "layout_E_2P.png",
-    thermal_img: "Thermal_commonscale/E_2P.png"
+    thermal_img: "Thermal_commonscale/E_2P.png",
+    rth: "— K/W", tu1: "— °C", tu2: "— °C", rthu1: "— K/W", rthu2: "— K/W", lac: "— nH", rac: "— mΩ", cdcp: "— pF", cac: "— pF", utilisation: "— %"
   },
   {
     num: "CASE 05", tag: "Parallel Devices", tagClass: "tag-green",
@@ -589,7 +604,8 @@ const cases = [
     imgFolder: "Thesis Images (Benchmarks)/Pictures_M_2P",
     top: "PM1000_M_2P_TOP.png", front: "PM1000_M_2P_FRONT.png", angle: "PM1000_M_2P_ANGLE.png",
     schematic: "schematic_M_2P.png", layout: "layout_M_2P.png",
-    thermal_img: "Thermal_commonscale/M_2P.png"
+    thermal_img: "Thermal_commonscale/M_2P.png",
+    rth: "— K/W", tu1: "— °C", tu2: "— °C", rthu1: "— K/W", rthu2: "— K/W", lac: "— nH", rac: "— mΩ", cdcp: "— pF", cac: "— pF", utilisation: "— %"
   },
   {
     num: "CASE 06", tag: "Parallel Devices", tagClass: "tag-green",
@@ -600,7 +616,8 @@ const cases = [
     imgFolder: "Thesis Images (Benchmarks)/Pictures_D_2P",
     top: "PM1000_D_2P_TOP.png", front: "PM1000_D_2P_FRONT.png", angle: "PM1000_D_2P_ANGLE.png",
     schematic: "schematic_D_2P.png", layout: "layout_D_2P.png",
-    thermal_img: "Thermal_commonscale/D_2P.png"
+    thermal_img: "Thermal_commonscale/D_2P.png",
+    rth: "— K/W", tu1: "— °C", tu2: "— °C", rthu1: "— K/W", rthu2: "— K/W", lac: "— nH", rac: "— mΩ", cdcp: "— pF", cac: "— pF", utilisation: "— %"
   },
   {
     num: "CASE 07", tag: "Parallel Devices", tagClass: "tag-green",
@@ -611,7 +628,8 @@ const cases = [
     imgFolder: "Thesis Images (Benchmarks)/Pictures_E_4P",
     top: "PM1000_E_4P_TOP.png", front: "PM1000_E_4P_FRONT.png", angle: "PM1000_E_4P_ANGLE.png",
     schematic: "schematic_E_4P.png", layout: "layout_E_4P.png",
-    thermal_img: "Thermal_commonscale/E_4P.png"
+    thermal_img: "Thermal_commonscale/E_4P.png",
+    rth: "— K/W", tu1: "— °C", tu2: "— °C", rthu1: "— K/W", rthu2: "— K/W", lac: "— nH", rac: "— mΩ", cdcp: "— pF", cac: "— pF", utilisation: "— %"
   },
   {
     num: "CASE 08", tag: "Parallel Devices", tagClass: "tag-green",
@@ -622,7 +640,8 @@ const cases = [
     imgFolder: "Thesis Images (Benchmarks)/Pictures_M_4P",
     top: "PM1000_M_4P_TOP.png", front: "PM1000_M_4P_FRONT.png", angle: "PM1000_M_4P_ANGLE.png",
     schematic: "schematic_M_4P.png", layout: "layout_M_4P.png",
-    thermal_img: "Thermal_commonscale/M_4P.png"
+    thermal_img: "Thermal_commonscale/M_4P.png",
+    rth: "— K/W", tu1: "— °C", tu2: "— °C", rthu1: "— K/W", rthu2: "— K/W", lac: "— nH", rac: "— mΩ", cdcp: "— pF", cac: "— pF", utilisation: "— %"
   },
   {
     num: "CASE 09", tag: "Parallel Devices", tagClass: "tag-green",
@@ -633,7 +652,8 @@ const cases = [
     imgFolder: "Thesis Images (Benchmarks)/Pictures_D_4P",
     top: "PM1000_D_4P_TOP.png", front: "PM1000_D_4P_FRONT.png", angle: "PM1000_D_4P_ANGLE.png",
     schematic: "schematic_D_4P.png", layout: "layout_D_4P.png",
-    thermal_img: "Thermal_commonscale/D_4P.png"
+    thermal_img: "Thermal_commonscale/D_4P.png",
+    rth: "— K/W", tu1: "— °C", tu2: "— °C", rthu1: "— K/W", rthu2: "— K/W", lac: "— nH", rac: "— mΩ", cdcp: "— pF", cac: "— pF", utilisation: "— %"
   },
   {
     num: "CASE 10", tag: "Sensitivity & Variant", tagClass: "tag-orange",
@@ -644,7 +664,8 @@ const cases = [
     imgFolder: "Thesis Images (Benchmarks)/Pictures_D_4P_gates",
     top: "PM1000_4P_gates_TOP.png", front: "PM1000_4P_gates_FRONT.png", angle: "PM1000_4P_gates_ANGLE.png",
     schematic: "schematic_D_4P_gates.png", layout: "layout_D_4P_gates.png",
-    thermal_img: "Thermal_commonscale/D_4P_gates.png"
+    thermal_img: "Thermal_commonscale/D_4P_gates.png",
+    rth: "— K/W", tu1: "— °C", tu2: "— °C", rthu1: "— K/W", rthu2: "— K/W", lac: "— nH", rac: "— mΩ", cdcp: "— pF", cac: "— pF", utilisation: "— %"
   },
   {
     num: "CASE 11", tag: "Sensitivity & Variant", tagClass: "tag-orange",
@@ -655,7 +676,8 @@ const cases = [
     imgFolder: "Thesis Images (Benchmarks)/Pictures_D_4P_bp",
     top: "PM1000_D_4P_bp_TOP.png", front: "PM1000_D_4P_bp_FRONT.png", angle: "PM1000_D_4P_bp_ANGLE.png",
     schematic: "schematic_D_4P_bp.png", layout: "layout_D_4P_bp.png",
-    thermal_img: "Thermal_commonscale/D_4P_bp.png"
+    thermal_img: "Thermal_commonscale/D_4P_bp.png",
+    rth: "— K/W", tu1: "— °C", tu2: "— °C", rthu1: "— K/W", rthu2: "— K/W", lac: "— nH", rac: "— mΩ", cdcp: "— pF", cac: "— pF", utilisation: "— %"
   },
   {
     num: "CASE 12", tag: "Extreme Case", tagClass: "tag-red",
@@ -666,7 +688,8 @@ const cases = [
     imgFolder: "Thesis Images (Benchmarks)/Pictures_NPC",
     top: "NPC_TOP.png", front: "NPC_FRONT.png", angle: "NPC_ANGLE.png",
     schematic: "schematic_NPC.png", layout: "layout_NPC.png",
-    thermal_img: "Thermal_commonscale/NPC.png"
+    thermal_img: "Thermal_commonscale/NPC.png",
+    rth: "— K/W", tu1: "— °C", tu2: "— °C", rthu1: "— K/W", rthu2: "— K/W", lac: "— nH", rac: "— mΩ", cdcp: "— pF", cac: "— pF", utilisation: "— %"
   }
 ];
 
@@ -717,8 +740,10 @@ function makeCard(c) {
       <div class="case-thumbs" id="thumbs-${c.num.replace(' ','')}"></div>
     </div>
     <div class="case-metrics">
-      <div class="metric"><span class="metric-label">L-AC (inductance)</span><span class="metric-value">${c.inductance}</span></div>
-      <div class="metric"><span class="metric-label">R<sub>th</sub> (thermal)</span><span class="metric-value">${c.thermal}</span></div>
+      <div class="metric"><span class="metric-label">L-AC</span><span class="metric-value">${c.inductance}</span></div>
+      <div class="metric"><span class="metric-label">R<sub>th</sub> avg</span><span class="metric-value">${c.thermal}</span></div>
+      <div class="metric"><span class="metric-label">Device count</span><span class="metric-value">${c.dies}</span></div>
+      <div class="metric"><span class="metric-label">Board utilisation</span><span class="metric-value">${c.utilisation}</span></div>
     </div>
     <div class="case-badges">
       <span class="badge">${c.topology}</span>
@@ -727,16 +752,39 @@ function makeCard(c) {
     </div>
     <div class="case-dropdowns">
       <div class="dropdown-item">
-        <button class="dropdown-trigger" onclick="toggleDropdown(this)">SCHEMATIC <span class="dropdown-arrow">▼</span></button>
+        <button class="dropdown-trigger" data-type="schematic" onclick="toggleDropdown(this)">SCHEMATIC <span class="dropdown-arrow">▼</span></button>
         <div class="dropdown-content" id="dd-sch-${c.num.replace(' ','')}"></div>
       </div>
       <div class="dropdown-item">
-        <button class="dropdown-trigger" onclick="toggleDropdown(this)">LAYOUT <span class="dropdown-arrow">▼</span></button>
+        <button class="dropdown-trigger" data-type="layout" onclick="toggleDropdown(this)">LAYOUT <span class="dropdown-arrow">▼</span></button>
         <div class="dropdown-content" id="dd-lay-${c.num.replace(' ','')}"></div>
       </div>
       <div class="dropdown-item">
-        <button class="dropdown-trigger" onclick="toggleDropdown(this)">THERMAL PLOT <span class="dropdown-arrow">▼</span></button>
-        <div class="dropdown-content" id="dd-th-${c.num.replace(' ','')}"></div>
+        <button class="dropdown-trigger" data-type="thermal" onclick="toggleDropdown(this)">THERMAL ANALYSIS <span class="dropdown-arrow">▼</span></button>
+        <div class="dropdown-content" id="dd-th-${c.num.replace(' ','')}">
+          <table class="data-table">
+            <tr class="section-header"><td colspan="2">Device Temperatures</td></tr>
+            <tr><td>U1 temperature</td><td>${c.tu1}</td></tr>
+            <tr><td>U2 temperature</td><td>${c.tu2}</td></tr>
+            <tr class="section-header"><td colspan="2">Thermal Resistance</td></tr>
+            <tr><td>R<sub>th</sub> U1</td><td>${c.rthu1}</td></tr>
+            <tr><td>R<sub>th</sub> U2</td><td>${c.rthu2}</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="dropdown-item">
+        <button class="dropdown-trigger" data-type="electrical" onclick="toggleDropdown(this)">ELECTRICAL PARASITICS <span class="dropdown-arrow">▼</span></button>
+        <div class="dropdown-content" id="dd-el-${c.num.replace(' ','')}">
+          <table class="data-table">
+            <tr class="section-header"><td colspan="2">Inductance</td></tr>
+            <tr><td>L-AC</td><td>${c.lac}</td></tr>
+            <tr class="section-header"><td colspan="2">Resistance</td></tr>
+            <tr><td>R-AC</td><td>${c.rac}</td></tr>
+            <tr class="section-header"><td colspan="2">Capacitance</td></tr>
+            <tr><td>C-DCP</td><td>${c.cdcp}</td></tr>
+            <tr><td>C-AC</td><td>${c.cac}</td></tr>
+          </table>
+        </div>
       </div>
     </div>`;
 
@@ -748,7 +796,7 @@ function makeCard(c) {
   );
   card.querySelector(`#dd-sch-${key}`).appendChild(makeDropdownImg(schemSrc, 'Schematic for ' + c.title));
   card.querySelector(`#dd-lay-${key}`).appendChild(makeDropdownImg(layoutSrc, 'Layout for ' + c.title));
-  card.querySelector(`#dd-th-${key}`).appendChild(makeDropdownImg(thermalSrc, 'Thermal for ' + c.title));
+  card.querySelector(`#dd-th-${key}`).insertBefore(makeDropdownImg(thermalSrc, 'Thermal for ' + c.title), card.querySelector(`#dd-th-${key}`).firstChild);
 
   return card;
 }
