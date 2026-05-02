@@ -553,143 +553,167 @@ const cases = [
     num: "CASE 01", tag: "Baseline & Refinement", tagClass: "tag-blue",
     title: "Baseline copper — 1 die",
     desc: "Unrefined copper planes with a single die per switch. Establishes the reference inductance against which all subsequent cases are compared.",
-    inductance: "11.48 nH", thermal: "0.191 K/W",
-    topology: "Half bridge", dies: "1 die",
+    inductance: "11.48 nH", thermal: "0.191 K/W", topology: "Half bridge", dies: "2 devices",
     imgFolder: "Thesis Images (Benchmarks)/Pictures_E",
     top: "PM1000_E_TOP.png", front: "PM1000_E_FRONT.png", angle: "PM1000_E_ANGLE.png",
-    schematic: "schematic_E.png", layout: "layout_E.png",
-    thermal_img: "Thermal_commonscale/E.png",
-    rth: "0.191 K/W", tu1: "21.91°C", tu2: "21.91°C", rthu1: "0.191 K/W", rthu2: "0.191 K/W",
-    lac: "11.48 nH", rac: "18.4 mΩ", cdcp: "178.52 pF", cac: "180.07 pF", utilisation: "9%"
+    schematic: "schematic_E.png", layout: "layout_E.png", thermal_img: "Thermal_commonscale/E.png",
+    utilisation: "9%",
+    devices: [{name:"U1",temp:"21.91°C",rth:"0.191 K/W"},{name:"U2",temp:"21.91°C",rth:"0.191 K/W"}],
+    lac: "11.48 nH", rac: "18.4 mΩ", cdcp: "178.52 pF", cac: "180.07 pF",
+    npc: false
   },
   {
     num: "CASE 02", tag: "Baseline & Refinement", tagClass: "tag-blue",
     title: "Intermediate refined copper — 1 die",
     desc: "Intermediate copper plane refinement on a single die. Partial loop area reduction and improved current return path alignment.",
-    inductance: "10.17 nH", thermal: "0.192 K/W",
-    topology: "Half bridge", dies: "1 die",
+    inductance: "10.17 nH", thermal: "0.192 K/W", topology: "Half bridge", dies: "2 devices",
     imgFolder: "Thesis Images (Benchmarks)/Pictures_M",
     top: "PM1000_M_TOP.png", front: "PM1000_M_FRONT.png", angle: "PM1000_M_ANGLE.png",
-    schematic: "schematic_M.png", layout: "layout_M.png",
-    thermal_img: "Thermal_commonscale/M.png",
-    rth: "0.192 K/W", tu1: "— °C", tu2: "— °C", rthu1: "— K/W", rthu2: "— K/W", lac: "10.17 nH", rac: "— mΩ", cdcp: "— pF", cac: "— pF", utilisation: "— %", tag: "Baseline & Refinement", tagClass: "tag-blue",
+    schematic: "schematic_M.png", layout: "layout_M.png", thermal_img: "Thermal_commonscale/M.png",
+    utilisation: "9.9%",
+    devices: [{name:"U1",temp:"21.92°C",rth:"0.192 K/W"},{name:"U2",temp:"21.92°C",rth:"0.192 K/W"}],
+    lac: "10.17 nH", rac: "29.2 mΩ", cdcp: "126.2 pF", cac: "230.53 pF",
+    npc: false
+  },
+  {
+    num: "CASE 03", tag: "Baseline & Refinement", tagClass: "tag-blue",
     title: "Advanced refined copper — 1 die",
     desc: "Advanced refinement copper geometry on a single die. Field cancellation, close forward/return path placement and minimal loop area.",
-    inductance: "6.01 nH", thermal: "0.192 K/W",
-    topology: "Half bridge", dies: "1 die",
+    inductance: "6.01 nH", thermal: "0.192 K/W", topology: "Half bridge", dies: "2 devices",
     imgFolder: "Thesis Images (Benchmarks)/Pictures_D",
     top: "PM1000_D_TOP.png", front: "PM1000_D_FRONT.png", angle: "PM1000_D_ANGLE.png",
-    schematic: "schematic_D.png", layout: "layout_D.png",
-    thermal_img: "Thermal_commonscale/D.png",
-    rth: "0.192 K/W", tu1: "— °C", tu2: "— °C", rthu1: "— K/W", rthu2: "— K/W", lac: "6.01 nH", rac: "— mΩ", cdcp: "— pF", cdcn: "— pF", cac: "— pF", utilisation: "— %"
+    schematic: "schematic_D.png", layout: "layout_D.png", thermal_img: "Thermal_commonscale/D.png",
+    utilisation: "28.9%",
+    devices: [{name:"U1",temp:"21.92°C",rth:"0.192 K/W"},{name:"U2",temp:"21.92°C",rth:"0.192 K/W"}],
+    lac: "6.01 nH", rac: "16.0 mΩ", cdcp: "193.89 pF", cac: "145.45 pF",
+    npc: false
   },
   {
     num: "CASE 04", tag: "Parallel Devices", tagClass: "tag-green",
     title: "Baseline copper — 2 parallel dies",
     desc: "Unrefined copper planes with two parallel dies per switch. Tests scalability of baseline geometry to higher current configurations.",
-    inductance: "— nH", thermal: "— K/W",
-    topology: "Half bridge", dies: "2 dies",
+    inductance: "7.04 nH", thermal: "0.191 K/W", topology: "Half bridge", dies: "4 devices",
     imgFolder: "Thesis Images (Benchmarks)/Pictures_E_2P",
     top: "PM1000_E_2P_TOP.png", front: "PM1000_E_2P_FRONT.png", angle: "PM1000_E_2P_ANGLE.png",
-    schematic: "schematic_E_2P.png", layout: "layout_E_2P.png",
-    thermal_img: "Thermal_commonscale/E_2P.png",
-    rth: "— K/W", tu1: "— °C", tu2: "— °C", rthu1: "— K/W", rthu2: "— K/W", lac: "— nH", rac: "— mΩ", cdcp: "— pF", cac: "— pF", utilisation: "— %"
+    schematic: "schematic_E_2P.png", layout: "layout_E_2P.png", thermal_img: "Thermal_commonscale/E_2P.png",
+    utilisation: "16.9%",
+    devices: [{name:"U1",temp:"21.91°C",rth:"0.191 K/W"},{name:"U2",temp:"21.91°C",rth:"0.191 K/W"},{name:"U3",temp:"21.91°C",rth:"0.191 K/W"},{name:"U4",temp:"21.91°C",rth:"0.191 K/W"}],
+    lac: "7.04 nH", rac: "9.8 mΩ", cdcp: "178.08 pF", cac: "179.93 pF",
+    npc: false
   },
   {
     num: "CASE 05", tag: "Parallel Devices", tagClass: "tag-green",
     title: "Intermediate refined copper — 2 parallel dies",
     desc: "Intermediate copper plane refinement with two parallel dies per switch.",
-    inductance: "— nH", thermal: "— K/W",
-    topology: "Half bridge", dies: "2 dies",
+    inductance: "6.77 nH", thermal: "0.196 K/W", topology: "Half bridge", dies: "4 devices",
     imgFolder: "Thesis Images (Benchmarks)/Pictures_M_2P",
     top: "PM1000_M_2P_TOP.png", front: "PM1000_M_2P_FRONT.png", angle: "PM1000_M_2P_ANGLE.png",
-    schematic: "schematic_M_2P.png", layout: "layout_M_2P.png",
-    thermal_img: "Thermal_commonscale/M_2P.png",
-    rth: "— K/W", tu1: "— °C", tu2: "— °C", rthu1: "— K/W", rthu2: "— K/W", lac: "— nH", rac: "— mΩ", cdcp: "— pF", cac: "— pF", utilisation: "— %"
+    schematic: "schematic_M_2P.png", layout: "layout_M_2P.png", thermal_img: "Thermal_commonscale/M_2P.png",
+    utilisation: "16.9%",
+    devices: [{name:"U1",temp:"21.93°C",rth:"0.193 K/W"},{name:"U2",temp:"21.95°C",rth:"0.195 K/W"},{name:"U3",temp:"21.93°C",rth:"0.193 K/W"},{name:"U4",temp:"21.96°C",rth:"0.196 K/W"}],
+    lac: "6.77 nH", rac: "16.5 mΩ", cdcp: "125.16 pF", cac: "231.15 pF",
+    npc: false
   },
   {
     num: "CASE 06", tag: "Parallel Devices", tagClass: "tag-green",
     title: "Advanced refined copper — 2 parallel dies",
     desc: "Advanced refinement with two parallel dies per switch.",
-    inductance: "— nH", thermal: "— K/W",
-    topology: "Half bridge", dies: "2 dies",
+    inductance: "5.04 nH", thermal: "0.200 K/W", topology: "Half bridge", dies: "4 devices",
     imgFolder: "Thesis Images (Benchmarks)/Pictures_D_2P",
     top: "PM1000_D_2P_TOP.png", front: "PM1000_D_2P_FRONT.png", angle: "PM1000_D_2P_ANGLE.png",
-    schematic: "schematic_D_2P.png", layout: "layout_D_2P.png",
-    thermal_img: "Thermal_commonscale/D_2P.png",
-    rth: "— K/W", tu1: "— °C", tu2: "— °C", rthu1: "— K/W", rthu2: "— K/W", lac: "— nH", rac: "— mΩ", cdcp: "— pF", cac: "— pF", utilisation: "— %"
+    schematic: "schematic_D_2P.png", layout: "layout_D_2P.png", thermal_img: "Thermal_commonscale/D_2P.png",
+    utilisation: "36.8%",
+    devices: [{name:"U1",temp:"21.99°C",rth:"0.199 K/W"},{name:"U2",temp:"21.99°C",rth:"0.199 K/W"},{name:"U3",temp:"22.00°C",rth:"0.200 K/W"},{name:"U4",temp:"22.00°C",rth:"0.200 K/W"}],
+    lac: "5.04 nH", rac: "15.4 mΩ", cdcp: "183.18 pF", cac: "149.25 pF",
+    npc: false
   },
   {
     num: "CASE 07", tag: "Parallel Devices", tagClass: "tag-green",
     title: "Baseline copper — 4 parallel dies",
     desc: "Unrefined copper planes with four parallel dies per switch. Maximum device count for the EasyPACK footprint.",
-    inductance: "— nH", thermal: "— K/W",
-    topology: "Half bridge", dies: "4 dies",
+    inductance: "3.37 nH", thermal: "0.194 K/W", topology: "Half bridge", dies: "8 devices",
     imgFolder: "Thesis Images (Benchmarks)/Pictures_E_4P",
     top: "PM1000_E_4P_TOP.png", front: "PM1000_E_4P_FRONT.png", angle: "PM1000_E_4P_ANGLE.png",
-    schematic: "schematic_E_4P.png", layout: "layout_E_4P.png",
-    thermal_img: "Thermal_commonscale/E_4P.png",
-    rth: "— K/W", tu1: "— °C", tu2: "— °C", rthu1: "— K/W", rthu2: "— K/W", lac: "— nH", rac: "— mΩ", cdcp: "— pF", cac: "— pF", utilisation: "— %"
+    schematic: "schematic_E_4P.png", layout: "layout_E_4P.png", thermal_img: "Thermal_commonscale/E_4P.png",
+    utilisation: "32.6%",
+    devices: [{name:"U1",temp:"21.93°C",rth:"0.193 K/W"},{name:"U2",temp:"21.93°C",rth:"0.193 K/W"},{name:"U3",temp:"21.94°C",rth:"0.194 K/W"},{name:"U4",temp:"21.94°C",rth:"0.194 K/W"},{name:"U5",temp:"21.94°C",rth:"0.194 K/W"},{name:"U6",temp:"21.94°C",rth:"0.194 K/W"},{name:"U7",temp:"21.93°C",rth:"0.193 K/W"},{name:"U8",temp:"21.93°C",rth:"0.193 K/W"}],
+    lac: "3.37 nH", rac: "7.1 mΩ", cdcp: "176.04 pF", cac: "181.08 pF",
+    npc: false
   },
   {
     num: "CASE 08", tag: "Parallel Devices", tagClass: "tag-green",
     title: "Intermediate refined copper — 4 parallel dies",
     desc: "Intermediate refinement with four parallel dies per switch.",
-    inductance: "— nH", thermal: "— K/W",
-    topology: "Half bridge", dies: "4 dies",
+    inductance: "4.89 nH", thermal: "0.199 K/W", topology: "Half bridge", dies: "8 devices",
     imgFolder: "Thesis Images (Benchmarks)/Pictures_M_4P",
     top: "PM1000_M_4P_TOP.png", front: "PM1000_M_4P_FRONT.png", angle: "PM1000_M_4P_ANGLE.png",
-    schematic: "schematic_M_4P.png", layout: "layout_M_4P.png",
-    thermal_img: "Thermal_commonscale/M_4P.png",
-    rth: "— K/W", tu1: "— °C", tu2: "— °C", rthu1: "— K/W", rthu2: "— K/W", lac: "— nH", rac: "— mΩ", cdcp: "— pF", cac: "— pF", utilisation: "— %"
+    schematic: "schematic_M_4P.png", layout: "layout_M_4P.png", thermal_img: "Thermal_commonscale/M_4P.png",
+    utilisation: "36.5%",
+    devices: [{name:"U1",temp:"21.99°C",rth:"0.199 K/W"},{name:"U2",temp:"21.96°C",rth:"0.196 K/W"},{name:"U3",temp:"21.99°C",rth:"0.199 K/W"},{name:"U4",temp:"21.96°C",rth:"0.196 K/W"},{name:"U5",temp:"21.96°C",rth:"0.196 K/W"},{name:"U6",temp:"21.95°C",rth:"0.195 K/W"},{name:"U7",temp:"21.96°C",rth:"0.196 K/W"},{name:"U8",temp:"21.97°C",rth:"0.197 K/W"}],
+    lac: "4.89 nH", rac: "15.4 mΩ", cdcp: "141.14 pF", cac: "207.17 pF",
+    npc: false
   },
   {
     num: "CASE 09", tag: "Parallel Devices", tagClass: "tag-green",
     title: "Advanced refined copper — 4 parallel dies",
     desc: "Advanced refinement with four parallel dies per switch.",
-    inductance: "— nH", thermal: "— K/W",
-    topology: "Half bridge", dies: "4 dies",
+    inductance: "4.49 nH", thermal: "0.200 K/W", topology: "Half bridge", dies: "8 devices",
     imgFolder: "Thesis Images (Benchmarks)/Pictures_D_4P",
     top: "PM1000_D_4P_TOP.png", front: "PM1000_D_4P_FRONT.png", angle: "PM1000_D_4P_ANGLE.png",
-    schematic: "schematic_D_4P.png", layout: "layout_D_4P.png",
-    thermal_img: "Thermal_commonscale/D_4P.png",
-    rth: "— K/W", tu1: "— °C", tu2: "— °C", rthu1: "— K/W", rthu2: "— K/W", lac: "— nH", rac: "— mΩ", cdcp: "— pF", cac: "— pF", utilisation: "— %"
+    schematic: "schematic_D_4P.png", layout: "layout_D_4P.png", thermal_img: "Thermal_commonscale/D_4P.png",
+    utilisation: "54.3%",
+    devices: [{name:"U1",temp:"22.01°C",rth:"0.201 K/W"},{name:"U2",temp:"21.95°C",rth:"0.195 K/W"},{name:"U3",temp:"22.04°C",rth:"0.204 K/W"},{name:"U4",temp:"21.95°C",rth:"0.195 K/W"},{name:"U5",temp:"22.00°C",rth:"0.200 K/W"},{name:"U6",temp:"21.96°C",rth:"0.196 K/W"},{name:"U7",temp:"22.04°C",rth:"0.204 K/W"},{name:"U8",temp:"21.96°C",rth:"0.196 K/W"}],
+    lac: "4.49 nH", rac: "12.9 mΩ", cdcp: "178.87 pF", cac: "189.59 pF",
+    npc: false
   },
   {
     num: "CASE 10", tag: "Sensitivity & Variant", tagClass: "tag-orange",
     title: "4P gates variant",
     desc: "Layout sensitivity case with modified gate routing on the 4-parallel-die advanced configuration.",
-    inductance: "— nH", thermal: "— K/W",
-    topology: "Half bridge", dies: "4 dies",
+    inductance: "4.42 nH", thermal: "0.199 K/W", topology: "Half bridge", dies: "8 devices",
     imgFolder: "Thesis Images (Benchmarks)/Pictures_D_4P_gates",
     top: "PM1000_4P_gates_TOP.png", front: "PM1000_4P_gates_FRONT.png", angle: "PM1000_4P_gates_ANGLE.png",
-    schematic: "schematic_D_4P_gates.png", layout: "layout_D_4P_gates.png",
-    thermal_img: "Thermal_commonscale/D_4P_gates.png",
-    rth: "— K/W", tu1: "— °C", tu2: "— °C", rthu1: "— K/W", rthu2: "— K/W", lac: "— nH", rac: "— mΩ", cdcp: "— pF", cac: "— pF", utilisation: "— %"
+    schematic: "schematic_D_4P_gates.png", layout: "layout_D_4P_gates.png", thermal_img: "Thermal_commonscale/D_4P_gates.png",
+    utilisation: "50.5%",
+    devices: [{name:"U1",temp:"21.99°C",rth:"0.199 K/W"},{name:"U2",temp:"21.95°C",rth:"0.195 K/W"},{name:"U3",temp:"22.04°C",rth:"0.204 K/W"},{name:"U4",temp:"21.95°C",rth:"0.195 K/W"},{name:"U5",temp:"21.99°C",rth:"0.199 K/W"},{name:"U6",temp:"21.96°C",rth:"0.196 K/W"},{name:"U7",temp:"22.04°C",rth:"0.204 K/W"},{name:"U8",temp:"21.96°C",rth:"0.196 K/W"}],
+    lac: "4.42 nH", rac: "12.8 mΩ", cdcp: "182.73 pF", cac: "193.30 pF",
+    npc: false
   },
   {
     num: "CASE 11", tag: "Sensitivity & Variant", tagClass: "tag-orange",
     title: "4P backplane variant",
     desc: "Sensitivity case with backplane modification on the 4-parallel-die advanced configuration.",
-    inductance: "— nH", thermal: "— K/W",
-    topology: "Half bridge", dies: "4 dies",
+    inductance: "5.24 nH", thermal: "0.199 K/W", topology: "Half bridge", dies: "8 devices",
     imgFolder: "Thesis Images (Benchmarks)/Pictures_D_4P_bp",
     top: "PM1000_D_4P_bp_TOP.png", front: "PM1000_D_4P_bp_FRONT.png", angle: "PM1000_D_4P_bp_ANGLE.png",
-    schematic: "schematic_D_4P_bp.png", layout: "layout_D_4P_bp.png",
-    thermal_img: "Thermal_commonscale/D_4P_bp.png",
-    rth: "— K/W", tu1: "— °C", tu2: "— °C", rthu1: "— K/W", rthu2: "— K/W", lac: "— nH", rac: "— mΩ", cdcp: "— pF", cac: "— pF", utilisation: "— %"
+    schematic: "schematic_D_4P_bp.png", layout: "layout_D_4P_bp.png", thermal_img: "Thermal_commonscale/D_4P_bp.png",
+    utilisation: "32.6%",
+    devices: [{name:"U1",temp:"22.00°C",rth:"0.200 K/W"},{name:"U2",temp:"21.98°C",rth:"0.198 K/W"},{name:"U3",temp:"22.00°C",rth:"0.200 K/W"},{name:"U4",temp:"21.98°C",rth:"0.198 K/W"},{name:"U5",temp:"22.00°C",rth:"0.200 K/W"},{name:"U6",temp:"21.99°C",rth:"0.199 K/W"},{name:"U7",temp:"22.00°C",rth:"0.200 K/W"},{name:"U8",temp:"21.98°C",rth:"0.198 K/W"}],
+    lac: "5.24 nH", rac: "18.9 mΩ", cdcp: "154.93 pF", cac: "213.91 pF",
+    npc: false
   },
   {
     num: "CASE 12", tag: "Extreme Case", tagClass: "tag-red",
     title: "NPC topology — extreme case",
     desc: "Neutral point clamped topology as an extreme configuration test. Highest complexity case in the suite.",
-    inductance: "— nH", thermal: "— K/W",
-    topology: "NPC", dies: "1 die",
+    inductance: "See loops", thermal: "0.174 K/W", topology: "NPC", dies: "8 devices",
     imgFolder: "Thesis Images (Benchmarks)/Pictures_NPC",
     top: "NPC_TOP.png", front: "NPC_FRONT.png", angle: "NPC_ANGLE.png",
-    schematic: "schematic_NPC.png", layout: "layout_NPC.png",
-    thermal_img: "Thermal_commonscale/NPC.png",
-    rth: "— K/W", tu1: "— °C", tu2: "— °C", rthu1: "— K/W", rthu2: "— K/W", lac: "— nH", rac: "— mΩ", cdcp: "— pF", cac: "— pF", utilisation: "— %"
+    schematic: "schematic_NPC.png", layout: "layout_NPC.png", thermal_img: "Thermal_commonscale/NPC.png",
+    utilisation: "47.9%",
+    devices: [
+      {name:"U1",temp:"21.99°C",rth:"0.199 K/W"},{name:"U2",temp:"21.92°C",rth:"0.192 K/W"},
+      {name:"U3",temp:"20.79°C",rth:"0.079 K/W"},{name:"U4",temp:"20.73°C",rth:"0.073 K/W"},
+      {name:"D1",temp:"22.12°C",rth:"0.212 K/W"},{name:"D2",temp:"22.11°C",rth:"0.211 K/W"},
+      {name:"D3",temp:"22.10°C",rth:"0.210 K/W"},{name:"D4",temp:"22.10°C",rth:"0.210 K/W"}
+    ],
+    npc: true,
+    loops: [
+      {name:"Loop 1", lac:"9.73 nH", rac:"32.08 mΩ", cdcp:"115.57 pF", chsm:"82.25 pF", clsm:"137.65 pF"},
+      {name:"Loop 2", lac:"9.47 nH", rac:"30.69 mΩ", cdcp:"114.76 pF", chsm:"82.93 pF", clsm:"137.70 pF"},
+      {name:"Loop 3", lac:"5.04 nH", rac:"9.81 mΩ",  cdcp:"114.91 pF", chsm:"83.17 pF", clsm:"137.18 pF"},
+      {name:"Loop 4", lac:"6.08 nH", rac:"11.41 mΩ", cdcp:"114.76 pF", chsm:"82.63 pF", clsm:"136.53 pF"}
+    ]
   }
 ];
 
@@ -763,18 +787,20 @@ function makeCard(c) {
         <button class="dropdown-trigger" data-type="thermal" onclick="toggleDropdown(this)">THERMAL ANALYSIS <span class="dropdown-arrow">▼</span></button>
         <div class="dropdown-content" id="dd-th-${c.num.replace(' ','')}">
           <table class="data-table">
-            <tr class="section-header"><td colspan="2">Device Temperatures</td></tr>
-            <tr><td>U1 temperature</td><td>${c.tu1}</td></tr>
-            <tr><td>U2 temperature</td><td>${c.tu2}</td></tr>
-            <tr class="section-header"><td colspan="2">Thermal Resistance</td></tr>
-            <tr><td>R<sub>th</sub> U1</td><td>${c.rthu1}</td></tr>
-            <tr><td>R<sub>th</sub> U2</td><td>${c.rthu2}</td></tr>
+            <tr class="section-header"><td colspan="2">Device Temperatures & R<sub>th</sub></td></tr>
+            ${c.devices.map(d => `<tr><td>${d.name}</td><td>${d.temp} / ${d.rth}</td></tr>`).join('')}
           </table>
         </div>
       </div>
       <div class="dropdown-item">
         <button class="dropdown-trigger" data-type="electrical" onclick="toggleDropdown(this)">ELECTRICAL PARASITICS <span class="dropdown-arrow">▼</span></button>
         <div class="dropdown-content" id="dd-el-${c.num.replace(' ','')}">
+          ${c.npc ? `
+          <table class="data-table">
+            <tr class="section-header"><td colspan="6">Per-Loop Parameters</td></tr>
+            <tr style="font-size:10px;color:var(--text-muted)"><td></td><td>L-AC</td><td>R-AC</td><td>C-DCP</td><td>C-HSM</td><td>C-LSM</td></tr>
+            ${c.loops.map(l => `<tr><td style="color:var(--text-muted)">${l.name}</td><td>${l.lac}</td><td>${l.rac}</td><td>${l.cdcp}</td><td>${l.chsm}</td><td>${l.clsm}</td></tr>`).join('')}
+          </table>` : `
           <table class="data-table">
             <tr class="section-header"><td colspan="2">Inductance</td></tr>
             <tr><td>L-AC</td><td>${c.lac}</td></tr>
@@ -783,7 +809,7 @@ function makeCard(c) {
             <tr class="section-header"><td colspan="2">Capacitance</td></tr>
             <tr><td>C-DCP</td><td>${c.cdcp}</td></tr>
             <tr><td>C-AC</td><td>${c.cac}</td></tr>
-          </table>
+          </table>`}
         </div>
       </div>
     </div>`;
@@ -796,7 +822,8 @@ function makeCard(c) {
   );
   card.querySelector(`#dd-sch-${key}`).appendChild(makeDropdownImg(schemSrc, 'Schematic for ' + c.title));
   card.querySelector(`#dd-lay-${key}`).appendChild(makeDropdownImg(layoutSrc, 'Layout for ' + c.title));
-  card.querySelector(`#dd-th-${key}`).insertBefore(makeDropdownImg(thermalSrc, 'Thermal for ' + c.title), card.querySelector(`#dd-th-${key}`).firstChild);
+  const thDiv = card.querySelector(`#dd-th-${key}`);
+  thDiv.insertBefore(makeDropdownImg(thermalSrc, 'Thermal for ' + c.title), thDiv.firstChild);
 
   return card;
 }
