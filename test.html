@@ -490,21 +490,21 @@
           <p>Apply your copper plane synthesis method across any or all cases. Compare against reference L, R, C and RTH values in <code>/results/summary.csv</code>. Inductance (L-AC) is the primary performance metric.</p>
         </div>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- 3D PDF TEST -->
-<section id="pdf-test">
-  <div class="container">
-    <div class="section-label">3D PDF Test</div>
-    <h2>Case 01 — 3D PDF viewer</h2>
-    <p style="color:var(--text-dim);font-size:14px;margin-bottom:20px;">This is a test embed. 3D interaction requires Adobe Acrobat — other browsers may show a flat view or download prompt.</p>
-    <embed src="PM1000_E_3D_PDF.pdf" type="application/pdf" width="100%" height="600px" style="border-radius:8px;border:1px solid var(--border);">
-  </div>
-</section>
-
-<!-- DOWNLOAD -->
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <h3>File structure guide</h3>
+          <p>Each case folder follows a consistent structure. Replace <code>Case_XX</code> with the relevant case number (e.g. <code>Case_01</code>).</p>
+          <table class="data-table" style="margin-top:12px;">
+            <tr class="section-header"><td colspan="2">File locations</td></tr>
+            <tr><td>Schematic (Xpedition Designer)</td><td><code>Case_XX/Case_XX.prj</code></td></tr>
+            <tr><td>Layout (Xpedition Layout)</td><td><code>Case_XX/PCB/Case_XX.pcb</code></td></tr>
+            <tr><td>3D Model (STEP)</td><td><code>Case_XX/PCB/Output/Case_XX.step</code></td></tr>
+            <tr><td>Parasitic Extraction (HyperLynx)</td><td><code>Case_XX/PCB/Output/Case_XX.phys</code></td></tr>
+            <tr><td>Thermal Simulation (FloEFD)</td><td><code>Case_XX/PCB/Output/Thermal/Case_XX_step.prt</code></td></tr>
+          </table>
+        </div>
+      </div>
 <section id="download">
   <div class="container">
     <div class="section-label">Dataset</div>
