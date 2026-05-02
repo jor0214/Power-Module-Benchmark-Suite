@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Power Module Copper Layout Study</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f1117;--surface:#181c27;--surface2:#1e2333;--border:#2a3045;--border2:#374060;
+  --text:#e8ecf5;--muted:#8892aa;--accent:#4f8ef7;--accent2:#2d6be4;
+  --dcp:#e05252;--dcn:#4f8ef7;--ac:#e07b30;--green:#3ec98e;--amber:#f0b429;
+  --font:'IBM Plex Sans',sans-serif;--mono:'IBM Plex Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;line-height:1.65;overflow:hidden;}
+.page{display:none;height:100vh;animation:fadeIn 0.28s ease;}
+.page.active{display:flex;flex-direction:column;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* NAV */
+.nav{background:var(--surface);border-bottom:1px solid var(--border);padding:.7rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.nav-logo{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;}
+.steps{display:flex;align-items:center;gap:5px;}
+.sdot{width:8px;height:8px;border-radius:50%;background:var(--border2);transition:background .3s;}
+.sdot.done{background:var(--green);}
+.sdot.active{background:var(--accent);}
+.sdot.warn{background:var(--amber);}
+
+/* SCROLLABLE CONTENT PAGES */
+.scroll-body{flex:1;overflow-y:auto;padding:2rem;max-width:760px;margin:0 auto;width:100%;}
+.page-footer{background:var(--surface);border-top:1px solid var(--border);padding:.8rem 1.5rem;display:flex;justify-content:flex-end;gap:10px;flex-shrink:0;}
+
+/* BUTTONS */
+.btn{padding:9px 22px;border:none;border-radius:8px;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;transition:background .15s;letter-spacing:.01em;}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-primary:hover{background:var(--accent2);}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border);}
+.btn-ghost:hover{border-color:var(--border2);color:var(--text);}
+.btn-green{background:transparent;color:var(--green);border:1px solid var(--green);}
+.btn-green:hover{background:rgba(62,201,142,.1);}
+
+/* GDPR */
+#page-gdpr{align-items:center;justify-content:flex-start;padding:2rem;overflow-y:auto;}
+.gdpr-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;max-width:540px;width:100%;padding:2.2rem;margin:auto;}
+.badge{display:inline-block;background:var(--accent2);color:#fff;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:4px;margin-bottom:1rem;}
+.gdpr-card h1{font-size:20px;font-weight:600;margin-bottom:.3rem;}
+.sub{color:var(--muted);font-size:13px;margin-bottom:1.5rem;}
+.gsec{margin-bottom:1.2rem;}
+.gsec h3{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:.45rem;}
+.gsec p,.glist li{font-size:13px;color:var(--muted);line-height:1.7;}
+.glist{list-style:none;}
+.glist li{padding:3px 0 3px 15px;position:relative;}
+.glist li::before{content:'—';position:absolute;left:0;color:var(--border2);}
+hr.div{border:none;border-top:1px solid var(--border);margin:1.2rem 0;}
+.affirm{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.85rem 1.1rem;margin-bottom:1.2rem;font-size:13px;color:var(--text);line-height:1.6;}
+
+/* INFO PAGE */
+.scroll-body h1{font-size:22px;font-weight:600;margin-bottom:.3rem;}
+.tagline{color:var(--muted);font-size:13px;margin-bottom:1.6rem;padding-bottom:1rem;border-bottom:1px solid var(--border);}
+.isec{margin-bottom:1.5rem;}
+.isec h2{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:.7rem;display:flex;align-items:center;gap:8px;}
+.isec h2::after{content:'';flex:1;height:1px;background:var(--border);}
+.isec p{font-size:14px;color:#bcc4d8;line-height:1.75;margin-bottom:.5rem;}
+.isec p strong{color:var(--text);font-weight:500;}
+.callout{background:var(--surface2);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:.8rem 1rem;margin:.7rem 0;font-size:13px;color:#bcc4d8;line-height:1.7;}
+.callout.amber{border-left-color:var(--amber);}
+.callout strong{color:var(--text);}
+.net-chips{display:flex;flex-wrap:wrap;gap:8px;margin:.65rem 0;}
+.nchip{display:flex;align-items:center;gap:7px;background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:6px 12px;font-size:13px;}
+.nchip .sw{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+.nchip .nm{font-family:var(--mono);font-weight:500;}
+.nchip .nd{color:var(--muted);font-size:12px;}
+.rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:.6rem;}
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:.8rem 0;}
+.photo-card{display:flex;flex-direction:column;}
+.photo-card img{width:100%;border-radius:8px;border:1px solid var(--border);display:block;object-fit:cover;aspect-ratio:4/3;}
+.photo-card .pcaption{font-size:11px;color:var(--muted);text-align:center;margin-top:5px;font-family:var(--mono);line-height:1.4;}
+.rule{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.7rem .9rem;font-size:13px;color:#bcc4d8;line-height:1.5;}
+.rule .rn{font-family:var(--mono);font-size:10px;color:var(--accent);font-weight:500;margin-bottom:3px;}
+
+/* TASK LAYOUT */
+.task-wrap{flex:1;display:flex;flex-direction:row;overflow:hidden;min-height:0;}
+.sidebar{width:205px;min-width:165px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:11px 10px;gap:9px;overflow-y:auto;flex-shrink:0;}
+.task-main{flex:1;display:flex;flex-direction:column;min-width:0;}
+.toolbar{background:var(--surface);border-bottom:1px solid var(--border);padding:6px 10px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;flex-shrink:0;}
+.cwrap{flex:1;overflow:hidden;position:relative;}
+canvas{display:block;cursor:crosshair;}
+.statusbar{background:var(--surface2);border-top:1px solid var(--border);padding:3px 10px;font-size:11px;color:var(--muted);font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0;}
+.schpanel{width:255px;min-width:185px;background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;}
+.schhdr{padding:7px 10px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);flex-shrink:0;}
+.schscroll{flex:1;overflow:auto;padding:7px;}
+.schscroll img{width:100%;display:block;border-radius:4px;}
+
+/* SIDEBAR COMPONENTS */
+.slabel{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
+.net-btn{display:flex;align-items:center;gap:6px;width:100%;padding:6px 8px;background:transparent;border:1px solid var(--border);border-radius:7px;cursor:pointer;font-family:var(--font);font-size:12px;color:var(--text);text-align:left;transition:border-color .15s,background .15s;}
+.net-btn:hover{background:var(--surface2);}
+.net-btn.active{border-color:var(--accent);background:rgba(79,142,247,.09);}
+.net-btn .ns{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+.net-btn .nl{font-family:var(--mono);font-weight:500;font-size:12px;}
+.net-btn .nd{font-size:11px;color:var(--muted);}
+.tool-btn{padding:4px 10px;font-size:12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;cursor:pointer;font-family:var(--font);color:var(--text);white-space:nowrap;transition:border-color .15s,background .15s;}
+.tool-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.tool-btn:hover:not(.active){border-color:var(--border2);}
+.icon-btn{padding:4px 9px;font-size:12px;background:transparent;border:1px solid var(--border);border-radius:6px;cursor:pointer;font-family:var(--font);color:var(--muted);white-space:nowrap;transition:border-color .15s;}
+.icon-btn:hover{border-color:var(--border2);color:var(--text);}
+.hdiv{border:none;border-top:1px solid var(--border);margin:1px 0;}
+.lrow{display:flex;align-items:center;gap:6px;font-size:12px;color:#bcc4d8;padding:2px 0;}
+.lrow input{accent-color:var(--accent);}
+.oprow{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);}
+.oprow input{flex:1;accent-color:var(--accent);}
+.proginfo{font-size:11px;color:var(--muted);line-height:1.9;font-family:var(--mono);}
+.proginfo span{font-weight:500;}
+.timer-badge{display:flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:4px 9px;font-family:var(--mono);font-size:12px;color:var(--muted);flex-shrink:0;}
+.timer-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1.4s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.warmup-banner{background:rgba(240,180,41,.07);border:1px solid rgba(240,180,41,.25);border-radius:8px;padding:.65rem .9rem;font-size:12px;color:var(--amber);line-height:1.5;}
+.warmup-banner strong{font-weight:600;}
+.submit-btn{margin-top:auto;padding:8px;font-size:12px;font-weight:600;font-family:var(--font);border:1px solid var(--green);border-radius:7px;background:transparent;color:var(--green);cursor:pointer;transition:background .15s;}
+.submit-btn:hover{background:rgba(62,201,142,.1);}
+.submit-btn:disabled{opacity:.4;cursor:default;}
+
+/* QUESTIONNAIRE */
+#page-q-warmup,#page-q-main,#page-q-hard{align-items:center;justify-content:flex-start;padding:2rem;overflow-y:auto;}
+.q-card{margin:auto;}
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;max-width:560px;width:100%;padding:2.2rem;}
+.q-card h2{font-size:18px;font-weight:600;margin-bottom:.3rem;}
+.q-card .q-sub{font-size:13px;color:var(--muted);margin-bottom:1.8rem;padding-bottom:1rem;border-bottom:1px solid var(--border);}
+.q-block{margin-bottom:1.5rem;}
+.q-block label{display:block;font-size:13px;color:var(--text);margin-bottom:.6rem;line-height:1.6;}
+.q-block label strong{font-weight:500;}
+.scale-row{display:flex;align-items:center;gap:8px;}
+.scale-row input[type=range]{flex:1;accent-color:var(--accent);}
+.scale-ends{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:3px;font-family:var(--mono);}
+.scale-val{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);min-width:20px;text-align:center;}
+.q-block textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:.7rem .9rem;font-family:var(--font);font-size:13px;color:var(--text);resize:vertical;min-height:70px;margin-top:.4rem;}
+.q-block textarea:focus{outline:none;border-color:var(--border2);}
+</style>
+</head>
+<body>
+
+<!-- ═══ PAGE 1: GDPR ═══ -->
+<div id="page-gdpr" class="page active">
+  <div class="gdpr-card">
+    <div class="badge">Research Study</div>
+    <h1>Power Module Copper Layout Task</h1>
+    <p class="sub">Two-part layout study &nbsp;|&nbsp; Please read carefully before continuing</p>
+    <div class="gsec">
+      <h3>What you will do</h3>
+      <p>You will complete two copper plane layout tasks for power module circuits. You will be given the component placement and schematic — your task is to draw the copper planes that electrically connect them. The study takes approximately 20–40 minutes.</p>
+    </div>
+    <div class="gsec">
+      <h3>Data collected</h3>
+      <ul class="glist">
+        <li>The geometry of the copper planes and routes you draw</li>
+        <li>Time spent actively drawing (not reading instructions or the schematic)</li>
+        <li>Short questionnaire responses after each task</li>
+        <li>A randomly generated anonymous session ID — no name, email, or personal details</li>
+      </ul>
+    </div>
+    <div class="gsec">
+      <h3>Your rights under GDPR</h3>
+      <ul class="glist">
+        <li>No personally identifiable information is collected at any point</li>
+        <li>Your submission cannot be linked back to you as an individual</li>
+        <li>You may withdraw at any time by closing this window — no data is saved unless you click Submit</li>
+        <li>Data will be used solely for academic research purposes and will be made publicly available in anonymised form</li>
+      </ul>
+    </div>
+    <hr class="div">
+    <div class="affirm">By clicking below I confirm I have read and understood the above, I am participating voluntarily, and I consent to my anonymised data being used for research and public release.</div>
+    <button class="btn btn-primary" style="width:100%;display:block;" onclick="goTo('page-info')">I understand and consent &rarr;</button>
+  </div>
+</div>
+
+
+<!-- ═══ PAGE 2: TASK INFO (minimal — no topology teaching) ═══ -->
+<div id="page-info" class="page">
+  <div class="nav">
+    <div class="nav-logo">Power Module Layout Study</div>
+    <div class="steps">
+      <div class="sdot done"></div><div class="sdot active"></div><div class="sdot"></div><div class="sdot"></div><div class="sdot"></div><div class="sdot"></div><div class="sdot"></div><div class="sdot"></div><div class="sdot"></div>
+    </div>
+  </div>
+  <div class="scroll-body">
+    <h1>What is a Power Module?</h1>
+    <p class="tagline">Read this before starting. It will help you understand what you are designing.</p>
+
+    <div class="isec">
+      <h2>The physical device</h2>
+      <p>A <strong>power module</strong> is a compact electronic package that controls the flow of large amounts of electrical power. They are used everywhere high currents need to be switched quickly — electric vehicles, industrial motor drives, solar inverters, and railway traction systems.</p>
+      <p>The images below show a real power module (PM1000) from three angles. You can see the semiconductor devices mounted on a substrate inside the package, with copper tracks connecting them to the external terminals.</p>
+      <div class="photo-grid">
+        <div class="photo-card">
+          <img src="https://raw.githubusercontent.com/jor0214/Power-Module-Benchmark-Suite/main/UserStudy_Images/PM1000_4P_gates_ANGLE.png" alt="Power module angle view">
+          <div class="pcaption">Angled view — shows the internal layout and wire connections</div>
+        </div>
+        <div class="photo-card">
+          <img src="https://raw.githubusercontent.com/jor0214/Power-Module-Benchmark-Suite/main/UserStudy_Images/PM1000_4P_gates_FRONT.png" alt="Power module front view">
+          <div class="pcaption">Front view — external terminals carry DC input and AC output</div>
+        </div>
+        <div class="photo-card">
+          <img src="https://raw.githubusercontent.com/jor0214/Power-Module-Benchmark-Suite/main/UserStudy_Images/PM1000_4P_gates_TOP.png" alt="Power module top view">
+          <div class="pcaption">Top view — semiconductor dies and copper planes visible</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="isec">
+      <h2>What's inside</h2>
+      <p>Inside every power module, semiconductor switching devices (similar to transistors) sit on a ceramic substrate. They are electrically connected using <strong>copper planes</strong> — large flat areas of copper that carry current between the devices and the external connector terminals.</p>
+      <p>Unlike the thin tracks on a regular PCB, copper planes are wide filled regions. This minimises electrical resistance and heat — critical when carrying tens or hundreds of amps.</p>
+      <div class="callout">
+        <strong>Your task in this study</strong> is to design those copper planes. You will be given the schematic (the circuit diagram) and the fixed positions of the components. You draw the copper shapes that connect everything up correctly.
+      </div>
+    </div>
+
+    <div class="isec">
+      <h2>The three connections you will draw</h2>
+      <p>Every layout in this study uses the same three electrical connections. Use the schematic during the task to work out which components belong to each one.</p>
+      <div class="net-chips">
+        <div class="nchip"><div class="sw" style="background:#e05252"></div><span class="nm">DCP</span><span class="nd">DC positive — high voltage input</span></div>
+        <div class="nchip"><div class="sw" style="background:#e07b30"></div><span class="nm">AC</span><span class="nd">AC midpoint — the switched output</span></div>
+        <div class="nchip"><div class="sw" style="background:#4f8ef7"></div><span class="nm">DCN</span><span class="nd">DC negative — return path</span></div>
+      </div>
+      <div class="callout amber">
+        <strong>Key principle:</strong> Each switching device sits physically inside the copper plane it belongs to — the electrical connection is made by the device resting on that copper. Use the schematic to decide which plane each device belongs to.
+      </div>
+    </div>
+
+    <div class="isec">
+      <h2>Rules for drawing</h2>
+      <div class="rules-grid">
+        <div class="rule"><div class="rn">RULE 01</div>All pads of the same net must be joined by one continuous copper area.</div>
+        <div class="rule"><div class="rn">RULE 02</div>Copper areas of different nets must not touch or overlap.</div>
+        <div class="rule"><div class="rn">RULE 03</div>All copper must stay inside the board boundary (red outline).</div>
+        <div class="rule"><div class="rn">RULE 04</div>Leave at least 1 grid square of clearance between adjacent planes.</div>
+        <div class="rule"><div class="rn">RULE 05</div>Your polygons don't need to be neat — topological correctness matters more than shape precision.</div>
+        <div class="rule"><div class="rn">RULE 06</div>For layouts with parallel devices, try to keep the plane symmetric between them.</div>
+      </div>
+    </div>
+
+    <div class="isec">
+      <h2>How to use the drawing tool</h2>
+      <ul class="glist" style="margin-left:1rem">
+        <li style="padding:3px 0">Select the correct <strong>net colour</strong> in the left panel before drawing each shape</li>
+        <li style="padding:3px 0"><strong>Draw plane</strong> — click to place polygon vertices; double-click or right-click to close</li>
+        <li style="padding:3px 0"><strong>Draw route</strong> — click waypoints for a thick bondwire-style connection; double-click to finish</li>
+        <li style="padding:3px 0"><strong>Undo</strong> removes the last vertex; <strong>Clear all</strong> resets the canvas</li>
+        <li style="padding:3px 0">The schematic is always visible on the right — refer to it throughout</li>
+        <li style="padding:3px 0">When happy with your design click <strong>Submit task</strong></li>
+      </ul>
+      <div class="callout amber" style="margin-top:.8rem">
+        <strong>Timer:</strong> The drawing timer only starts when you first click on the canvas. Time spent reading this page or studying the schematic does not count. There is no time limit.
+      </div>
+    </div>
+
+    <div class="isec">
+      <h2>Study structure</h2>
+      <p>You will complete <strong>three tasks</strong> of increasing difficulty. After each task there is a short questionnaire, and after the first task you will be shown a reference solution before continuing. The whole study takes approximately 20–40 minutes.</p>
+    </div>
+
+  </div>
+  <div class="page-footer">
+    <button class="btn btn-primary" onclick="goTo('page-warmup')">Start warm-up task &rarr;</button>
+  </div>
+</div>
+
+
+<!-- ═══ PAGE 3: WARM-UP TASK ═══ -->
+<div id="page-warmup" class="page">
+  <div class="nav">
+    <div class="nav-logo">Task 1 of 2 &nbsp;—&nbsp; Warm-up: single die per switch</div>
+    <div class="steps">
+      <div class="sdot done"></div><div class="sdot done"></div>
+      <div class="sdot active warn"></div>
+      <div class="sdot"></div><div class="sdot"></div><div class="sdot"></div><div class="sdot"></div>
+    </div>
+  </div>
+  <div class="task-wrap">
+    <div class="sidebar" id="sidebar-A">
+      <div class="warmup-banner"><strong>Warm-up task</strong><br>Single device per switch position. Use this to get familiar with the drawing tool.</div>
+      <div class="slabel">Net</div>
+      <div id="netbtns-A"></div>
+      <hr class="hdiv">
+      <div class="slabel">Tool</div>
+      <button class="tool-btn active" id="A-sb-plane" onclick="setTool('A','plane')">Draw plane</button>
+      <button class="tool-btn" id="A-sb-route" onclick="setTool('A','route')">Draw route</button>
+      <hr class="hdiv">
+      <div class="slabel">Layers</div>
+      <div class="lrow"><input type="checkbox" checked onchange="tasks.A.L.comp=this.checked;renderTask('A')"><span>Components</span></div>
+      <div class="lrow"><input type="checkbox" checked onchange="tasks.A.L.rat=this.checked;renderTask('A')"><span>Ratsnest</span></div>
+      <div class="lrow"><input type="checkbox" checked onchange="tasks.A.L.planes=this.checked;renderTask('A')"><span>Copper planes</span></div>
+      <div class="lrow"><input type="checkbox" checked onchange="tasks.A.L.routes=this.checked;renderTask('A')"><span>Routes</span></div>
+      <hr class="hdiv">
+      <div class="slabel">Opacity</div>
+      <div class="oprow"><span>lo</span><input type="range" min="20" max="85" value="58" step="5" oninput="tasks.A.opacity=this.value/100;renderTask('A')"><span>hi</span></div>
+      <hr class="hdiv">
+      <div class="slabel">Progress</div>
+      <div id="prog-A" class="proginfo"></div>
+      <button id="submit-A" class="submit-btn" onclick="submitTask('A')">Submit warm-up</button>
+    </div>
+    <div class="task-main">
+      <div class="toolbar">
+        <span style="font-size:10px;color:var(--muted);font-weight:600;font-family:var(--mono);margin-right:2px">TOOL</span>
+        <button class="tool-btn active" id="A-tb-plane" onclick="setTool('A','plane')">Draw plane</button>
+        <button class="tool-btn" id="A-tb-route" onclick="setTool('A','route')">Draw route</button>
+        <div style="flex:1"></div>
+        <div class="timer-badge" id="timer-A">
+          <div class="dot"></div>
+          <span id="timer-A-text">0:00</span>
+          <span style="font-size:10px;color:var(--border2)">drawing time</span>
+        </div>
+        <button class="icon-btn" onclick="undoTask('A')">&#8629; Undo</button>
+        <button class="icon-btn" onclick="clearTask('A')">Clear all</button>
+      </div>
+      <div class="cwrap" id="cwrap-A"><canvas id="pcb-A"></canvas></div>
+      <div class="statusbar" id="status-A">Select a net then click on the board to begin drawing. Timer starts on first click.</div>
+    </div>
+    <div class="schpanel">
+      <div class="schhdr">Schematic — Task 1</div>
+      <div class="schscroll"><img src="https://raw.githubusercontent.com/jor0214/Power-Module-Benchmark-Suite/main/UserStudy_Images/schematic_E.png" alt="Warm-up schematic"></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ PAGE 4: WARM-UP QUESTIONNAIRE ═══ -->
+<div id="page-q-warmup" class="page">
+  <div class="q-card">
+    <h2>Task 1 complete — quick questionnaire</h2>
+    <p class="q-sub">Warm-up task &nbsp;|&nbsp; 4 short questions, takes about 1 minute</p>
+
+    <div class="q-block">
+      <label><strong>Q1.</strong> How mentally demanding was the drawing task? (1 = not at all, 10 = extremely)</label>
+      <div class="scale-row">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)">1</span>
+        <input type="range" min="1" max="10" value="5" id="qA-demand" oninput="document.getElementById('qA-demand-val').textContent=this.value">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)">10</span>
+        <span class="scale-val" id="qA-demand-val">5</span>
+      </div>
+      <div class="scale-ends"><span>not demanding</span><span>extremely demanding</span></div>
+    </div>
+
+    <div class="q-block">
+      <label><strong>Q2.</strong> How confident are you that your layout is <em>electrically correct</em> (all the right pads connected)? (1 = not confident, 10 = very confident)</label>
+      <div class="scale-row">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)">1</span>
+        <input type="range" min="1" max="10" value="5" id="qA-elec" oninput="document.getElementById('qA-elec-val').textContent=this.value">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)">10</span>
+        <span class="scale-val" id="qA-elec-val">5</span>
+      </div>
+      <div class="scale-ends"><span>not confident</span><span>very confident</span></div>
+    </div>
+
+    <div class="q-block">
+      <label><strong>Q3.</strong> How confident are you that your layout is <em>physically good</em> (compact, symmetric, well separated)? (1 = not confident, 10 = very confident)</label>
+      <div class="scale-row">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)">1</span>
+        <input type="range" min="1" max="10" value="5" id="qA-phys" oninput="document.getElementById('qA-phys-val').textContent=this.value">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)">10</span>
+        <span class="scale-val" id="qA-phys-val">5</span>
+      </div>
+      <div class="scale-ends"><span>not confident</span><span>very confident</span></div>
+    </div>
+
+    <div class="q-block">
+      <label><strong>Q4.</strong> Any comments on the warm-up task or the tool? (optional)</label>
+      <textarea id="qA-comment" placeholder="Optional comments..."></textarea>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;margin-top:.5rem;">
+      <button class="btn btn-primary" onclick="saveQuestionnaire('A');goTo('page-solution')">See reference solution &rarr;</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ PAGE 5: WARMUP SOLUTION ═══ -->
+<div id="page-solution" class="page">
+  <div class="nav">
+    <div class="nav-logo">Warm-up — reference solution</div>
+    <div class="steps">
+      <div class="sdot done"></div><div class="sdot done"></div><div class="sdot done"></div><div class="sdot done"></div><div class="sdot active"></div><div class="sdot"></div><div class="sdot"></div><div class="sdot"></div><div class="sdot"></div>
+    </div>
+  </div>
+  <div class="scroll-body" style="max-width:860px;">
+    <h1 style="margin-bottom:.3rem;">Reference solution</h1>
+    <p class="tagline">Study this before moving to the main task — it shows the key principles you need to apply.</p>
+
+    <div class="isec">
+      <h2>What a correct solution looks like</h2>
+      <img src="https://raw.githubusercontent.com/jor0214/Power-Module-Benchmark-Suite/main/UserStudy_Images/layout_E.png" alt="Warmup reference solution" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin-bottom:1rem;">
+    </div>
+
+    <div class="isec">
+      <h2>Key things to notice</h2>
+      <div class="callout" style="margin-bottom:.8rem;">
+        <strong>Devices sit inside their plane.</strong> Each device's body sits entirely within the copper plane that corresponds to its drain connection — U1 sits in the DCP plane because its drain connects to DCP. The connection is made simply by the device resting on that copper.
+      </div>
+      <div class="callout" style="margin-bottom:.8rem;">
+        <strong>Bondwires bridge to the next plane.</strong> The source pads on the exposed side of the device cannot make contact through the plane beneath — they need bondwires (the grey lines) arcing across to the adjacent net plane. In this layout, U1's source pad is bonded across to the AC plane.
+      </div>
+      <div class="callout" style="margin-bottom:.8rem;">
+        <strong>Connector pads sit in their plane too.</strong> J1 and J2 (DCP connectors) sit inside the DCP plane. J7 and J8 (AC) sit inside the AC plane. J5 and J6 (DCN) sit inside the DCN plane.
+      </div>
+      <div class="callout amber">
+        <strong>Main task — two parallel devices per switch.</strong> The same principles apply, but now U1 and U3 are both high-side devices and must both sit within the same DCP plane. U2 and U4 are both low-side and must both sit within DCN. The AC plane connects all four devices at the midpoint. Symmetry between the parallel devices matters — try to make the current path equal length to both.
+      </div>
+    </div>
+
+  </div>
+  <div class="page-footer">
+    <button class="btn btn-primary" onclick="goTo('page-main')">Start main task &rarr;</button>
+  </div>
+</div>
+
+
+<!-- ═══ PAGE 6: MAIN TASK ═══ -->
+<div id="page-main" class="page">
+  <div class="nav">
+    <div class="nav-logo">Task 2 of 2 &nbsp;—&nbsp; Main task: two parallel dies per switch</div>
+    <div class="steps">
+      <div class="sdot done"></div><div class="sdot done"></div><div class="sdot done"></div><div class="sdot done"></div><div class="sdot done"></div><div class="sdot active"></div><div class="sdot"></div><div class="sdot"></div><div class="sdot"></div>
+    </div>
+  </div>
+  <div class="task-wrap">
+    <div class="sidebar" id="sidebar-B">
+      <div class="slabel">Net</div>
+      <div id="netbtns-B"></div>
+      <hr class="hdiv">
+      <div class="slabel">Tool</div>
+      <button class="tool-btn active" id="B-sb-plane" onclick="setTool('B','plane')">Draw plane</button>
+      <button class="tool-btn" id="B-sb-route" onclick="setTool('B','route')">Draw route</button>
+      <hr class="hdiv">
+      <div class="slabel">Layers</div>
+      <div class="lrow"><input type="checkbox" checked onchange="tasks.B.L.comp=this.checked;renderTask('B')"><span>Components</span></div>
+      <div class="lrow"><input type="checkbox" checked onchange="tasks.B.L.rat=this.checked;renderTask('B')"><span>Ratsnest</span></div>
+      <div class="lrow"><input type="checkbox" checked onchange="tasks.B.L.planes=this.checked;renderTask('B')"><span>Copper planes</span></div>
+      <div class="lrow"><input type="checkbox" checked onchange="tasks.B.L.routes=this.checked;renderTask('B')"><span>Routes</span></div>
+      <hr class="hdiv">
+      <div class="slabel">Opacity</div>
+      <div class="oprow"><span>lo</span><input type="range" min="20" max="85" value="58" step="5" oninput="tasks.B.opacity=this.value/100;renderTask('B')"><span>hi</span></div>
+      <hr class="hdiv">
+      <div class="slabel">Progress</div>
+      <div id="prog-B" class="proginfo"></div>
+      <button id="submit-B" class="submit-btn" onclick="submitTask('B')">Submit design</button>
+    </div>
+    <div class="task-main">
+      <div class="toolbar">
+        <span style="font-size:10px;color:var(--muted);font-weight:600;font-family:var(--mono);margin-right:2px">TOOL</span>
+        <button class="tool-btn active" id="B-tb-plane" onclick="setTool('B','plane')">Draw plane</button>
+        <button class="tool-btn" id="B-tb-route" onclick="setTool('B','route')">Draw route</button>
+        <div style="flex:1"></div>
+        <div class="timer-badge" id="timer-B">
+          <div class="dot"></div>
+          <span id="timer-B-text">0:00</span>
+          <span style="font-size:10px;color:var(--border2)">drawing time</span>
+        </div>
+        <button class="icon-btn" onclick="undoTask('B')">&#8629; Undo</button>
+        <button class="icon-btn" onclick="clearTask('B')">Clear all</button>
+      </div>
+      <div class="cwrap" id="cwrap-B"><canvas id="pcb-B"></canvas></div>
+      <div class="statusbar" id="status-B">Select a net then click on the board to begin drawing. Timer starts on first click.</div>
+    </div>
+    <div class="schpanel">
+      <div class="schhdr">Schematic — Task 2</div>
+      <div class="schscroll"><img src="https://raw.githubusercontent.com/jor0214/Power-Module-Benchmark-Suite/main/UserStudy_Images/schematic_M_2P.png" alt="Main schematic"></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ PAGE 6: MAIN TASK QUESTIONNAIRE ═══ -->
+<div id="page-q-main" class="page">
+  <div class="q-card">
+    <h2>Task 2 complete — final questionnaire</h2>
+    <p class="q-sub">Main task &nbsp;|&nbsp; 5 short questions</p>
+
+    <div class="q-block">
+      <label><strong>Q1.</strong> How mentally demanding was the drawing task? (1 = not at all, 10 = extremely)</label>
+      <div class="scale-row">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)">1</span>
+        <input type="range" min="1" max="10" value="5" id="qB-demand" oninput="document.getElementById('qB-demand-val').textContent=this.value">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)">10</span>
+        <span class="scale-val" id="qB-demand-val">5</span>
+      </div>
+      <div class="scale-ends"><span>not demanding</span><span>extremely demanding</span></div>
+    </div>
+
+    <div class="q-block">
+      <label><strong>Q2.</strong> How confident are you that your layout is <em>electrically correct</em>? (1 = not confident, 10 = very confident)</label>
+      <div class="scale-row">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)">1</span>
+        <input type="range" min="1" max="10" value="5" id="qB-elec" oninput="document.getElementById('qB-elec-val').textContent=this.value">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)">10</span>
+        <span class="scale-val" id="qB-elec-val">5</span>
+      </div>
+      <div class="scale-ends"><span>not confident</span><span>very confident</span></div>
+    </div>
+
+    <div class="q-block">
+      <label><strong>Q3.</strong> How confident are you that your layout is <em>physically good</em> (compact, symmetric, well separated)? (1 = not confident, 10 = very confident)</label>
+      <div class="scale-row">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)">1</span>
+        <input type="range" min="1" max="10" value="5" id="qB-phys" oninput="document.getElementById('qB-phys-val').textContent=this.value">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)">10</span>
+        <span class="scale-val" id="qB-phys-val">5</span>
+      </div>
+      <div class="scale-ends"><span>not confident</span><span>very confident</span></div>
+    </div>
+
+    <div class="q-block">
+      <label><strong>Q4.</strong> How did the main task compare to the warm-up in difficulty?</label>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-top:.4rem;">
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#bcc4d8;margin:0"><input type="radio" name="qB-diff" value="much_easier"> Much easier</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#bcc4d8;margin:0"><input type="radio" name="qB-diff" value="slightly_easier"> Slightly easier</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#bcc4d8;margin:0"><input type="radio" name="qB-diff" value="same"> About the same</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#bcc4d8;margin:0"><input type="radio" name="qB-diff" value="slightly_harder"> Slightly harder</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#bcc4d8;margin:0"><input type="radio" name="qB-diff" value="much_harder" checked> Much harder</label>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <label><strong>Q5.</strong> Any other comments? (optional)</label>
+      <textarea id="qB-comment" placeholder="Optional comments..."></textarea>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;margin-top:.5rem;">
+      <button class="btn btn-primary" onclick="saveQuestionnaire('B');goTo('page-solution-main')">See reference solution &rarr;</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+// ══════════════════════════════════════════════
+// CONSTANTS
+// ══════════════════════════════════════════════
+const NETS=[
+  {name:'DCP',color:'#e05252',label:'DCP',desc:'DC positive'},
+  {name:'AC', color:'#e07b30',label:'AC', desc:'Midpoint'},
+  {name:'DCN',color:'#4f8ef7',label:'DCN',desc:'DC negative'},
+];
+const NC={};
+NETS.forEach(n=>NC[n.name]=n.color);
+// Board dimensions in canvas units (scaled from mm, 55.3x39 aspect ratio)
+const BW=860, BH=606;
+const CX=16, CY=16, CW=828, CH=574; // copper region (1mm margin scaled)
+const GRID=16; // ~1mm grid squares
+
+// ── WARM-UP: positions scaled from KiCad mm coords (scale=860/55.3) ──
+const COMPS_A=[
+  {ref:'U1',x:117,y:213,w:89,h:171,type:'fet',label:'U1',rot:0},
+  {ref:'U2',x:497,y:213,w:89,h:171,type:'fet',label:'U2',rot:180},
+  {ref:'J1',x:43, y:397,w:39,h:39, type:'con',net:'DCP',label:'J1\nDCP'},
+  {ref:'J2',x:43, y:164,w:39,h:39, type:'con',net:'DCP',label:'J2\nDCP'},
+  {ref:'J7',x:401,y:381,w:39,h:39, type:'con',net:'AC', label:'J7\nAC'},
+  {ref:'J8',x:401,y:195,w:39,h:39, type:'con',net:'AC', label:'J8\nAC'},
+  {ref:'J5',x:774,y:397,w:39,h:39, type:'con',net:'DCN',label:'J5\nDCN'},
+  {ref:'J6',x:774,y:164,w:39,h:39, type:'con',net:'DCN',label:'J6\nDCN'},
+];
+const RATS_A=[
+  {a:'J1',b:'U1',net:'DCP'},{a:'J2',b:'U1',net:'DCP'},
+  {a:'J7',b:'U1',net:'AC'},{a:'J7',b:'U2',net:'AC'},
+  {a:'J8',b:'U1',net:'AC'},{a:'J8',b:'U2',net:'AC'},
+  {a:'J5',b:'U2',net:'DCN'},{a:'J6',b:'U2',net:'DCN'},
+];
+
+// ── MAIN: 2-parallel-die half-bridge, 2×DCP 2×AC 2×DCN only ──
+const COMPS_B=[
+  {ref:'U1',x:268,y:60,  w:157,h:99, type:'fet',label:'U1'},
+  {ref:'U3',x:268,y:176, w:157,h:99, type:'fet',label:'U3'},
+  {ref:'U2',x:313,y:340, w:157,h:99, type:'fet',label:'U2'},
+  {ref:'U4',x:313,y:456, w:157,h:99, type:'fet',label:'U4'},
+  {ref:'J5',x:15,  y:88,  w:44, h:36, type:'con',net:'DCP',label:'J5\nDCP'},
+  {ref:'J6',x:15,  y:176, w:44, h:36, type:'con',net:'DCP',label:'J6\nDCP'},
+  {ref:'J3',x:757,y:206, w:44, h:36, type:'con',net:'AC', label:'J3\nAC'},
+  {ref:'J4',x:757,y:369, w:44, h:37, type:'con',net:'AC', label:'J4\nAC'},
+  {ref:'J7',x:15,  y:369, w:44, h:36, type:'con',net:'DCN',label:'J7\nDCN'},
+  {ref:'J8',x:15,  y:487, w:44, h:36, type:'con',net:'DCN',label:'J8\nDCN'},
+];
+const RATS_B=[
+  {a:'J5',b:'U1',net:'DCP'},{a:'J5',b:'U3',net:'DCP'},
+  {a:'J6',b:'U1',net:'DCP'},{a:'J6',b:'U3',net:'DCP'},
+  {a:'J7',b:'U2',net:'DCN'},{a:'J7',b:'U4',net:'DCN'},
+  {a:'J8',b:'U2',net:'DCN'},{a:'J8',b:'U4',net:'DCN'},
+  {a:'J3',b:'U1',net:'AC'},{a:'J3',b:'U3',net:'AC'},
+  {a:'J4',b:'U2',net:'AC'},{a:'J4',b:'U4',net:'AC'},
+];
+
+// ── HARD: mirrored single-die half-bridge, 2×DCP 2×AC 2×DCN only ──
+// DCP: top-left + bottom-left, DCN: mid-left stacked, AC: top-right + bottom-right
+const COMPS_C=[
+  {ref:'U2',x:150,y:230,w:96, h:181,type:'fet',label:'U2'},
+  {ref:'U1',x:470,y:230,w:95, h:181,type:'fet',label:'U1'},
+  {ref:'J1',x:14,  y:50,  w:40, h:38, type:'con',net:'DCP',label:'J1\nDCP'},
+  {ref:'J2',x:14,  y:535, w:40, h:38, type:'con',net:'DCP',label:'J2\nDCP'},
+  {ref:'J3',x:14,  y:230, w:40, h:38, type:'con',net:'DCN',label:'J3\nDCN'},
+  {ref:'J4',x:14,  y:308, w:40, h:38, type:'con',net:'DCN',label:'J4\nDCN'},
+  {ref:'J7',x:806, y:50,  w:40, h:38, type:'con',net:'AC', label:'J7\nAC'},
+  {ref:'J8',x:806, y:535, w:40, h:38, type:'con',net:'AC', label:'J8\nAC'},
+];
+const RATS_C=[
+  {a:'J1',b:'U1',net:'DCP'},{a:'J2',b:'U1',net:'DCP'},
+  {a:'J3',b:'U2',net:'DCN'},{a:'J4',b:'U2',net:'DCN'},
+  {a:'J7',b:'U1',net:'AC'},{a:'J7',b:'U2',net:'AC'},
+  {a:'J8',b:'U1',net:'AC'},{a:'J8',b:'U2',net:'AC'},
+];
+
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+const SID='anon_'+Math.random().toString(36).slice(2,10);
+const mouse={A:{x:0,y:0},B:{x:0,y:0}};
+let qData={A:null,B:null,C:null};
+
+function makeTask(id,comps,rats){
+  return {
+    id,comps,rats,
+    tool:'plane',net:'DCP',
+    planes:[],routes:[],
+    cp:null,cr:null,
+    opacity:.58,
+    L:{comp:true,rat:true,planes:true,routes:true},
+    cv:null,ctx:null,
+    sc:1,ox:0,oy:0,
+    drawSecs:0,timerStart:null,
+    hasDrawn:false,submitted:false,
+  };
+}
+const tasks={
+  A:makeTask('A',COMPS_A,RATS_A),
+  B:makeTask('B',COMPS_B,RATS_B),
+  C:makeTask('C',COMPS_C,RATS_C),
+};
+
+// ══════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════
+function goTo(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='page-warmup') initTask('A');
+  if(id==='page-main')   { initTask('B'); tasks.B.sawSolution=true; }
+  if(id==='page-hard')   { initTask('C'); tasks.C.sawSolution=true; }
+}
+
+// ══════════════════════════════════════════════
+// TASK INIT
+// ══════════════════════════════════════════════
+function initTask(tid){
+  const t=tasks[tid];
+  if(t.cv)return;
+  t.cv=document.getElementById('pcb-'+tid);
+  t.ctx=t.cv.getContext('2d');
+  const wrap=document.getElementById('cwrap-'+tid);
+  function resize(){
+    t.cv.width=wrap.clientWidth;
+    t.cv.height=wrap.clientHeight;
+    fit(t);renderTask(tid);
+  }
+  t.cv.addEventListener('mousedown',e=>onDown(tid,e));
+  t.cv.addEventListener('mousemove',e=>onMove(tid,e));
+  t.cv.addEventListener('dblclick',()=>finish(tid));
+  t.cv.addEventListener('contextmenu',e=>{e.preventDefault();finish(tid);});
+  new ResizeObserver(resize).observe(wrap);
+  resize();
+  buildNetBtns(tid);
+  updateProg(tid);
+  setInterval(()=>tickTimer(tid),500);
+}
+
+function fit(t){
+  const pad=32; // px padding around board
+  const sx=(t.cv.width-pad*2)/BW;
+  const sy=(t.cv.height-pad*2)/BH;
+  t.sc=Math.min(sx,sy);
+  t.ox=(t.cv.width-BW*t.sc)/2;
+  t.oy=(t.cv.height-BH*t.sc)/2;
+}
+const tb=(t,cx,cy)=>[(cx-t.ox)/t.sc,(cy-t.oy)/t.sc];
+
+// ══════════════════════════════════════════════
+// TIMER — only drawing time
+// ══════════════════════════════════════════════
+function startTimer(tid){
+  const t=tasks[tid];
+  if(t.timerStart===null) t.timerStart=Date.now();
+}
+function pauseTimer(tid){
+  const t=tasks[tid];
+  if(t.timerStart!==null){
+    t.drawSecs+=Math.round((Date.now()-t.timerStart)/1000);
+    t.timerStart=null;
+  }
+}
+function getDrawSecs(tid){
+  const t=tasks[tid];
+  let s=t.drawSecs;
+  if(t.timerStart!==null) s+=Math.round((Date.now()-t.timerStart)/1000);
+  return s;
+}
+function tickTimer(tid){
+  if(tasks[tid].submitted)return;
+  const s=getDrawSecs(tid);
+  const el=document.getElementById('timer-'+tid+'-text');
+  if(el) el.textContent=Math.floor(s/60)+':'+(s%60<10?'0':'')+(s%60);
+}
+
+// ══════════════════════════════════════════════
+// NET BUTTONS
+// ══════════════════════════════════════════════
+function buildNetBtns(tid){
+  const t=tasks[tid];
+  const d=document.getElementById('netbtns-'+tid);
+  d.innerHTML='';
+  NETS.forEach(n=>{
+    const b=document.createElement('button');
+    b.className='net-btn'+(n.name===t.net?' active':'');
+    b.innerHTML=`<span class="ns" style="background:${n.color}"></span><span class="nl">${n.name}</span><span class="nd">${n.desc}</span>`;
+    b.onclick=()=>{t.net=n.name;buildNetBtns(tid);};
+    d.appendChild(b);
+  });
+}
+
+// ══════════════════════════════════════════════
+// TOOL
+// ══════════════════════════════════════════════
+function setTool(tid,tool){
+  const t=tasks[tid];
+  t.tool=tool;t.cp=null;t.cr=null;
+  ['plane','route'].forEach(id=>{
+    [tid+'-sb-',tid+'-tb-'].forEach(p=>{
+      const b=document.getElementById(p+id);
+      if(b)b.className='tool-btn'+(id===tool?' active':'');
+    });
+  });
+  renderTask(tid);
+  setStat(tid,tool==='plane'?'Click to place polygon vertices. Double-click or right-click to close.':
+              'Click to add route waypoints. Double-click to finish.');
+}
+
+// ══════════════════════════════════════════════
+// MOUSE EVENTS
+// ══════════════════════════════════════════════
+function onDown(tid,e){
+  const t=tasks[tid];
+  const r=t.cv.getBoundingClientRect();
+  const [bx,by]=tb(t,e.clientX-r.left,e.clientY-r.top);
+  startTimer(tid);
+  if(t.tool==='plane'){
+    if(!t.cp)t.cp={net:t.net,pts:[]};
+    t.cp.pts.push({x:bx,y:by});
+  }else{
+    if(!t.cr)t.cr={net:t.net,pts:[]};
+    t.cr.pts.push({x:bx,y:by});
+  }
+  renderTask(tid);
+}
+function onMove(tid,e){
+  const t=tasks[tid];
+  const r=t.cv.getBoundingClientRect();
+  const [bx,by]=tb(t,e.clientX-r.left,e.clientY-r.top);
+  mouse[tid]={x:bx,y:by};
+  if(t.cp||t.cr)renderTask(tid);
+  const ins=bx>=CX&&bx<=CX+CW&&by>=CY&&by<=CY+CH;
+  const n=t.cp?t.cp.pts.length:(t.cr?t.cr.pts.length:0);
+  setStat(tid,
+    t.cp?`Drawing ${t.net} — ${n} vertices. Dbl-click or right-click to close.`:
+    t.cr?`Routing ${t.net} — ${n} points. Dbl-click to finish.`:
+    ins?'Select a net and tool, then click to start drawing.':'Outside copper region.');
+}
+function finish(tid){
+  const t=tasks[tid];
+  if(t.cp&&t.cp.pts.length>=3){t.planes.push({net:t.cp.net,pts:[...t.cp.pts]});updateProg(tid);}
+  if(t.cr&&t.cr.pts.length>=2){t.routes.push({net:t.cr.net,pts:[...t.cr.pts]});updateProg(tid);}
+  t.cp=null;t.cr=null;renderTask(tid);
+}
+function undoTask(tid){
+  const t=tasks[tid];
+  if(t.cp){t.cp.pts.pop();if(!t.cp.pts.length)t.cp=null;}
+  else if(t.cr){t.cr.pts.pop();if(!t.cr.pts.length)t.cr=null;}
+  else if(t.planes.length)t.planes.pop();
+  else if(t.routes.length)t.routes.pop();
+  renderTask(tid);updateProg(tid);
+}
+function clearTask(tid){
+  const t=tasks[tid];
+  t.planes=[];t.routes=[];t.cp=null;t.cr=null;
+  renderTask(tid);updateProg(tid);
+}
+
+// ══════════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════════
+function renderTask(tid){
+  const t=tasks[tid];
+  if(!t.ctx)return;
+  const cv=t.cv,ctx=t.ctx;
+  ctx.clearRect(0,0,cv.width,cv.height);
+  ctx.save();
+  ctx.translate(t.ox,t.oy);
+  ctx.scale(t.sc,t.sc);
+  drawBoard(ctx,t.sc);
+  if(t.L.planes)drawPlanes(ctx,t);
+  if(t.L.routes)drawRoutes(ctx,t);
+  if(t.L.rat)drawRats(ctx,t);
+  if(t.L.comp)drawComps(ctx,t);
+  drawCurrent(ctx,t,mouse[tid]);
+  ctx.restore();
+}
+
+function drawBoard(ctx,sc){
+  // Board substrate (full board area)
+  ctx.fillStyle='#2a1f0a';
+  ctx.fillRect(0,0,BW,BH);
+  // Copper region background (slightly different shade)
+  ctx.fillStyle='#1e3812';
+  ctx.fillRect(CX,CY,CW,CH);
+  // 1mm fine grid (within copper region only)
+  ctx.strokeStyle='rgba(255,255,255,0.05)';
+  ctx.lineWidth=0.3/sc;
+  for(let x=CX;x<=CX+CW;x+=GRID){ctx.beginPath();ctx.moveTo(x,CY);ctx.lineTo(x,CY+CH);ctx.stroke();}
+  for(let y=CY;y<=CY+CH;y+=GRID){ctx.beginPath();ctx.moveTo(CX,y);ctx.lineTo(CX+CW,y);ctx.stroke();}
+  // 5mm major grid
+  ctx.strokeStyle='rgba(255,255,255,0.10)';
+  ctx.lineWidth=0.5/sc;
+  for(let x=CX;x<=CX+CW;x+=GRID*5){ctx.beginPath();ctx.moveTo(x,CY);ctx.lineTo(x,CY+CH);ctx.stroke();}
+  for(let y=CY;y<=CY+CH;y+=GRID*5){ctx.beginPath();ctx.moveTo(CX,y);ctx.lineTo(CX+CW,y);ctx.stroke();}
+  // Copper region boundary (dashed, shows drawable area)
+  ctx.strokeStyle='rgba(255,255,255,0.2)';
+  ctx.lineWidth=0.3/sc;
+  ctx.setLineDash([1/sc,1/sc]);
+  ctx.strokeRect(CX,CY,CW,CH);
+  ctx.setLineDash([]);
+  // Board outer boundary (red)
+  ctx.strokeStyle='#cc2222';
+  ctx.lineWidth=0.5/sc;
+  ctx.strokeRect(0.25/sc,0.25/sc,BW-0.5/sc,BH-0.5/sc);
+}
+
+function drawComps(ctx,t){
+  t.comps.forEach(c=>{
+    const isFET=c.type==='fet',isCon=c.type==='con';
+    ctx.fillStyle='rgba(0,0,0,.25)';
+    ctx.fillRect(c.x+2,c.y+2,c.w,c.h);
+    ctx.fillStyle=isFET?'#8a6800':'#b08010';
+    ctx.strokeStyle='rgba(0,0,0,.5)';
+    ctx.lineWidth=1/t.sc;
+    ctx.beginPath();
+    if(ctx.roundRect)ctx.roundRect(c.x,c.y,c.w,c.h,3);else ctx.rect(c.x,c.y,c.w,c.h);
+    ctx.fill();ctx.stroke();
+    if(isFET){
+      for(let i=0;i<3;i++){
+        ctx.fillStyle='rgba(0,0,0,.18)';
+        ctx.fillRect(c.x+c.w*.08,c.y+c.h*(.17+i*.27),c.w*.84,c.h*.13);
+      }
+      for(let i=0;i<3;i++){
+        ctx.fillStyle='#d4a820';
+        ctx.beginPath();
+        if(ctx.roundRect)ctx.roundRect(c.x-13,c.y+c.h*(.22+i*.25)-4,13,8,2);
+        else ctx.rect(c.x-13,c.y+c.h*(.22+i*.25)-4,13,8);
+        ctx.fill();
+        ctx.beginPath();
+        if(ctx.roundRect)ctx.roundRect(c.x+c.w,c.y+c.h*(.22+i*.25)-4,13,8,2);
+        else ctx.rect(c.x+c.w,c.y+c.h*(.22+i*.25)-4,13,8);
+        ctx.fill();
+      }
+    }
+    if(isCon){
+      ctx.fillStyle='rgba(0,0,0,.4)';
+      ctx.beginPath();ctx.arc(c.x+c.w/2,c.y+c.h/2,c.w*.17,0,Math.PI*2);ctx.fill();
+      if(NC[c.net]){
+        ctx.strokeStyle=NC[c.net];ctx.lineWidth=2/t.sc;
+        ctx.beginPath();ctx.arc(c.x+c.w/2,c.y+c.h/2,c.w*.27,0,Math.PI*2);ctx.stroke();
+      }
+    }
+    ctx.fillStyle='rgba(255,255,255,.92)';
+    ctx.font=`bold ${isCon?8.5:10}px monospace`;
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    c.label.split('\n').forEach((l,i,a)=>
+      ctx.fillText(l,c.x+c.w/2,c.y+c.h/2+(i-(a.length-1)/2)*(isCon?9:11))
+    );
+  });
+}
+
+function drawRats(ctx,t){
+  ctx.save();
+  t.rats.forEach(r=>{
+    const pow=['DCP','DCN','AC'].includes(r.net);
+    const ca=t.comps.find(x=>x.ref===r.a),cb=t.comps.find(x=>x.ref===r.b);
+    if(!ca||!cb)return;
+    const ax=ca.x+ca.w/2,ay=ca.y+ca.h/2,bx=cb.x+cb.w/2,by=cb.y+cb.h/2;
+    ctx.setLineDash(pow?[6,4]:[3,5]);
+    ctx.strokeStyle=pow?(NC[r.net]+'88'):'rgba(255,255,255,.1)';
+    ctx.lineWidth=(pow?1.5:.7)/t.sc;
+    ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(bx,by);ctx.stroke();
+  });
+  ctx.setLineDash([]);ctx.restore();
+}
+
+function drawPlanes(ctx,t){
+  t.planes.forEach(p=>{
+    if(p.pts.length<2)return;
+    ctx.globalAlpha=t.opacity;
+    ctx.fillStyle=NC[p.net]||'#888';
+    ctx.beginPath();ctx.moveTo(p.pts[0].x,p.pts[0].y);
+    p.pts.slice(1).forEach(pt=>ctx.lineTo(pt.x,pt.y));
+    ctx.closePath();ctx.fill();
+    ctx.globalAlpha=Math.min(t.opacity*1.5,1);
+    ctx.strokeStyle=NC[p.net];ctx.lineWidth=1.5/t.sc;ctx.stroke();
+    ctx.globalAlpha=1;
+    const mx=p.pts.reduce((s,pt)=>s+pt.x,0)/p.pts.length;
+    const my=p.pts.reduce((s,pt)=>s+pt.y,0)/p.pts.length;
+    ctx.fillStyle='rgba(255,255,255,.88)';
+    ctx.font='bold 10px monospace';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(p.net,mx,my);
+  });
+}
+
+function drawRoutes(ctx,t){
+  t.routes.forEach(r=>{
+    if(r.pts.length<2)return;
+    ctx.globalAlpha=.95;
+    ctx.strokeStyle='#b8bec8';
+    ctx.lineWidth=4/t.sc;ctx.lineCap='round';ctx.lineJoin='round';
+    ctx.beginPath();ctx.moveTo(r.pts[0].x,r.pts[0].y);
+    r.pts.slice(1).forEach(pt=>ctx.lineTo(pt.x,pt.y));
+    ctx.stroke();
+    ctx.strokeStyle='#dde0e6';ctx.lineWidth=1.5/t.sc;
+    ctx.beginPath();ctx.moveTo(r.pts[0].x,r.pts[0].y);
+    r.pts.slice(1).forEach(pt=>ctx.lineTo(pt.x,pt.y));
+    ctx.stroke();
+    ctx.globalAlpha=1;
+  });
+}
+
+function drawCurrent(ctx,t,m){
+  const col=NC[t.net]||'#888';
+  if(t.cp&&t.cp.pts.length>0){
+    const pts=t.cp.pts;
+    ctx.globalAlpha=.2;ctx.fillStyle=col;
+    ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);
+    pts.slice(1).forEach(pt=>ctx.lineTo(pt.x,pt.y));
+    ctx.lineTo(m.x,m.y);ctx.closePath();ctx.fill();
+    ctx.globalAlpha=1;ctx.strokeStyle=col;ctx.lineWidth=1.5/t.sc;
+    ctx.setLineDash([6/t.sc,3/t.sc]);
+    ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);
+    pts.slice(1).forEach(pt=>ctx.lineTo(pt.x,pt.y));
+    ctx.lineTo(m.x,m.y);ctx.closePath();ctx.stroke();
+    ctx.setLineDash([]);
+    pts.forEach((pt,i)=>{
+      ctx.beginPath();ctx.arc(pt.x,pt.y,5/t.sc,0,Math.PI*2);
+      ctx.fillStyle=i===0?'#fff':col;ctx.fill();
+    });
+  }
+  if(t.cr&&t.cr.pts.length>0){
+    const pts=t.cr.pts;
+    ctx.globalAlpha=.8;ctx.strokeStyle='#b8bec8';ctx.lineWidth=4/t.sc;ctx.lineCap='round';
+    ctx.setLineDash([9/t.sc,4/t.sc]);
+    ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);
+    pts.slice(1).forEach(pt=>ctx.lineTo(pt.x,pt.y));
+    ctx.lineTo(m.x,m.y);ctx.stroke();
+    ctx.setLineDash([]);ctx.globalAlpha=1;
+  }
+}
+
+// ══════════════════════════════════════════════
+// UI HELPERS
+// ══════════════════════════════════════════════
+function setStat(tid,msg){const e=document.getElementById('status-'+tid);if(e)e.textContent=msg;}
+
+function updateProg(tid){
+  const t=tasks[tid];
+  const drawn=[...new Set(t.planes.map(p=>p.net))];
+  const el=document.getElementById('prog-'+tid);
+  if(el) el.innerHTML=
+    `planes:<span>${t.planes.length}</span>  routes:<span>${t.routes.length}</span><br>`+
+    NETS.map(n=>`<span style="color:${NC[n.name]}">${n.name}</span> ${drawn.includes(n.name)?'&#10003;':'&#8212;'}`).join('&nbsp;&nbsp;');
+}
+
+// ══════════════════════════════════════════════
+// SUBMIT TASK → go to questionnaire
+// ══════════════════════════════════════════════
+function submitTask(tid){
+  const t=tasks[tid];
+  pauseTimer(tid);
+  t.submitted=true;
+  t.finalDrawSecs=getDrawSecs(tid);
+  // freeze timer display
+  const dot=document.querySelector('#timer-'+tid+' .dot');
+  if(dot){dot.style.animation='none';dot.style.background='var(--border2)';}
+  const btn=document.getElementById('submit-'+tid);
+  if(btn){btn.textContent='Submitted ✓';btn.disabled=true;
+    btn.style.cssText='border-color:#3ec98e;color:#3ec98e;opacity:.45;cursor:default;margin-top:auto;padding:8px;font-size:12px;font-weight:600;font-family:var(--font);border-radius:7px;';}
+  goTo(tid==='A'?'page-q-warmup':tid==='B'?'page-q-main':'page-q-hard');
+}
+
+// ══════════════════════════════════════════════
+// SAVE QUESTIONNAIRE DATA
+// ══════════════════════════════════════════════
+function saveQuestionnaire(tid){
+  if(tid==='C'){
+    const diffEl=document.querySelector('input[name="qC-diff"]:checked');
+    qData.C={
+      mentalDemand: parseInt(document.getElementById('qC-demand').value),
+      electricalConfidence: parseInt(document.getElementById('qC-elec').value),
+      physicalConfidence: parseInt(document.getElementById('qC-phys').value),
+      difficultyVsPrevious: diffEl?diffEl.value:'not_answered',
+      comment: document.getElementById('qC-comment').value.trim(),
+    };
+  } else if(tid==='A'){
+    qData.A={
+      mentalDemand: parseInt(document.getElementById('qA-demand').value),
+      electricalConfidence: parseInt(document.getElementById('qA-elec').value),
+      physicalConfidence: parseInt(document.getElementById('qA-phys').value),
+      comment: document.getElementById('qA-comment').value.trim(),
+    };
+  } else if(tid==='B'){
+    const diffEl=document.querySelector('input[name="qB-diff"]:checked');
+    qData.B={
+      mentalDemand: parseInt(document.getElementById('qB-demand').value),
+      electricalConfidence: parseInt(document.getElementById('qB-elec').value),
+      physicalConfidence: parseInt(document.getElementById('qB-phys').value),
+      difficultyVsWarmup: diffEl?diffEl.value:'not_answered',
+      comment: document.getElementById('qB-comment').value.trim(),
+    };
+  }
+}
+
+// ══════════════════════════════════════════════
+// FINAL SUBMIT — download both JSONs
+// ══════════════════════════════════════════════
+function finalSubmit(){
+  saveQuestionnaire('B');
+
+  const tA=tasks.A, tB=tasks.B, tC=tasks.C;
+
+  const recA={
+    sessionId:SID,
+    task:'warmup',
+    timestamp:new Date().toISOString(),
+    drawingSeconds:tA.finalDrawSecs||getDrawSecs('A'),
+    planes:tA.planes,
+    routes:tA.routes,
+    questionnaire:qData.A,
+  };
+  const recB={
+    sessionId:SID,
+    task:'main',
+    timestamp:new Date().toISOString(),
+    drawingSeconds:tB.finalDrawSecs||getDrawSecs('B'),
+    sawWarmupSolution: tB.sawSolution || false,
+    planes:tB.planes,
+    routes:tB.routes,
+    questionnaire:qData.B,
+  };
+
+  function dl(rec,name){
+    const blob=new Blob([JSON.stringify(rec,null,2)],{type:'application/json'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+    a.download=name+'_'+SID+'.json';a.click();
+  }
+
+  dl(recA,'pcb_warmup');
+  setTimeout(()=>dl(recB,'pcb_main'),400);
+  setTimeout(()=>{
+    const recC={
+      sessionId:SID,
+      task:'hard',
+      timestamp:new Date().toISOString(),
+      drawingSeconds:tC.finalDrawSecs||getDrawSecs('C'),
+      sawWarmupSolution: tC.sawSolution||false,
+      planes:tC.planes,
+      routes:tC.routes,
+      questionnaire:qData.C,
+    };
+    dl(recC,'pcb_hard');
+  },800);
+
+  const sA=tA.finalDrawSecs||0, sB=tB.finalDrawSecs||0, sC=tC.finalDrawSecs||0;
+  setTimeout(()=>alert(
+    'Study complete — thank you!\n\n'+
+    'Session ID: '+SID+'\n'+
+    'Warm-up drawing time: '+Math.floor(sA/60)+'m '+(sA%60)+'s\n'+
+    'Main task drawing time: '+Math.floor(sB/60)+'m '+(sB%60)+'s\n'+
+    'Hard task drawing time: '+Math.floor(sC/60)+'m '+(sC%60)+'s\n\n'+
+    'Two JSON files have been downloaded to your device.\nPlease send both files to the researcher.'
+  ),800);
+}
+</script>
+
+
+<!-- ═══ MAIN SOLUTION PAGE ═══ -->
+<div id="page-solution-main" class="page">
+  <div class="nav">
+    <div class="nav-logo">Main task — reference solution</div>
+    <div class="steps">
+      <div class="sdot done"></div><div class="sdot done"></div><div class="sdot done"></div>
+      <div class="sdot done"></div><div class="sdot done"></div><div class="sdot done"></div>
+      <div class="sdot done"></div><div class="sdot active"></div><div class="sdot"></div>
+    </div>
+  </div>
+  <div class="scroll-body" style="max-width:900px;">
+    <h1 style="margin-bottom:.3rem;">Reference solution — main task</h1>
+    <p class="tagline">Study this before the hard task. Notice how the parallel dies are handled.</p>
+    <div class="isec">
+      <h2>Correct layout</h2>
+      <img src="https://raw.githubusercontent.com/jor0214/Power-Module-Benchmark-Suite/main/UserStudy_Images/layout_M_2P.png" alt="Main task reference solution" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin-bottom:1rem;">
+    </div>
+    <div class="isec">
+      <h2>Key things to notice</h2>
+      <div class="callout" style="margin-bottom:.8rem;">
+        <strong>Both parallel dies in the same plane.</strong> U1 and U3 are both high-side devices — they both sit inside the DCP plane. U2 and U4 are both low-side — they both sit inside DCN. The AC plane bridges the midpoint between all four devices.
+      </div>
+      <div class="callout" style="margin-bottom:.8rem;">
+        <strong>Symmetry matters.</strong> The DCP plane reaches both U1 and U3 with roughly equal path lengths. Asymmetric planes cause one device to carry more current than the other, leading to uneven heating and reduced reliability.
+      </div>
+      <div class="callout amber">
+        <strong>Hard task coming up.</strong> The next layout uses a mirrored arrangement — the two devices face opposite directions. The connector positions may not be where you expect. Read the schematic carefully.
+      </div>
+    </div>
+  </div>
+  <div class="page-footer">
+    <button class="btn btn-primary" onclick="goTo('page-hard')">Start hard task &rarr;</button>
+  </div>
+</div>
+
+
+<!-- ═══ PAGE 8: HARD TASK ═══ -->
+<div id="page-hard" class="page">
+  <div class="nav">
+    <div class="nav-logo">Task 3 of 3 &nbsp;—&nbsp; Hard task: mirrored single-die half-bridge</div>
+    <div class="steps">
+      <div class="sdot done"></div><div class="sdot done"></div><div class="sdot done"></div>
+      <div class="sdot done"></div><div class="sdot done"></div><div class="sdot done"></div>
+      <div class="sdot done"></div><div class="sdot active"></div><div class="sdot"></div>
+    </div>
+  </div>
+  <div class="task-wrap">
+    <div class="sidebar" id="sidebar-C">
+      <div class="slabel">Net</div>
+      <div id="netbtns-C"></div>
+      <hr class="hdiv">
+      <div class="slabel">Tool</div>
+      <button class="tool-btn active" id="C-sb-plane" onclick="setTool('C','plane')">Draw plane</button>
+      <button class="tool-btn" id="C-sb-route" onclick="setTool('C','route')">Draw route</button>
+      <hr class="hdiv">
+      <div class="slabel">Layers</div>
+      <div class="lrow"><input type="checkbox" checked onchange="tasks.C.L.comp=this.checked;renderTask('C')"><span>Components</span></div>
+      <div class="lrow"><input type="checkbox" checked onchange="tasks.C.L.rat=this.checked;renderTask('C')"><span>Ratsnest</span></div>
+      <div class="lrow"><input type="checkbox" checked onchange="tasks.C.L.planes=this.checked;renderTask('C')"><span>Copper planes</span></div>
+      <div class="lrow"><input type="checkbox" checked onchange="tasks.C.L.routes=this.checked;renderTask('C')"><span>Routes</span></div>
+      <hr class="hdiv">
+      <div class="slabel">Opacity</div>
+      <div class="oprow"><span>lo</span><input type="range" min="20" max="85" value="58" step="5" oninput="tasks.C.opacity=this.value/100;renderTask('C')"><span>hi</span></div>
+      <hr class="hdiv">
+      <div class="slabel">Progress</div>
+      <div id="prog-C" class="proginfo"></div>
+      <button id="submit-C" class="submit-btn" onclick="submitTask('C')">Submit design</button>
+    </div>
+    <div class="task-main">
+      <div class="toolbar">
+        <span style="font-size:10px;color:var(--muted);font-weight:600;font-family:var(--mono);margin-right:2px">TOOL</span>
+        <button class="tool-btn active" id="C-tb-plane" onclick="setTool('C','plane')">Draw plane</button>
+        <button class="tool-btn" id="C-tb-route" onclick="setTool('C','route')">Draw route</button>
+        <div style="flex:1"></div>
+        <div class="timer-badge" id="timer-C">
+          <div class="dot"></div>
+          <span id="timer-C-text">0:00</span>
+          <span style="font-size:10px;color:var(--border2)">drawing time</span>
+        </div>
+        <button class="icon-btn" onclick="undoTask('C')">&#8629; Undo</button>
+        <button class="icon-btn" onclick="clearTask('C')">Clear all</button>
+      </div>
+      <div class="cwrap" id="cwrap-C"><canvas id="pcb-C"></canvas></div>
+      <div class="statusbar" id="status-C">Select a net then click on the board to begin drawing. Timer starts on first click.</div>
+    </div>
+    <div class="schpanel">
+      <div class="schhdr">Schematic — Task 3</div>
+      <div class="schscroll"><img src="https://raw.githubusercontent.com/jor0214/Power-Module-Benchmark-Suite/main/UserStudy_Images/schematic_D.png" alt="Hard task schematic"></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ PAGE 9: HARD TASK QUESTIONNAIRE ═══ -->
+<div id="page-q-hard" class="page">
+  <div class="q-card">
+    <h2>Task 3 complete — final questionnaire</h2>
+    <p class="q-sub">Hard task &nbsp;|&nbsp; 5 short questions</p>
+
+    <div class="q-block">
+      <label><strong>Q1.</strong> How mentally demanding was this task? (1 = not at all, 10 = extremely)</label>
+      <div class="scale-row">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)">1</span>
+        <input type="range" min="1" max="10" value="5" id="qC-demand" oninput="document.getElementById('qC-demand-val').textContent=this.value">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)">10</span>
+        <span class="scale-val" id="qC-demand-val">5</span>
+      </div>
+      <div class="scale-ends"><span>not demanding</span><span>extremely demanding</span></div>
+    </div>
+
+    <div class="q-block">
+      <label><strong>Q2.</strong> How confident are you that your layout is <em>electrically correct</em>? (1 = not confident, 10 = very confident)</label>
+      <div class="scale-row">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)">1</span>
+        <input type="range" min="1" max="10" value="5" id="qC-elec" oninput="document.getElementById('qC-elec-val').textContent=this.value">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)">10</span>
+        <span class="scale-val" id="qC-elec-val">5</span>
+      </div>
+      <div class="scale-ends"><span>not confident</span><span>very confident</span></div>
+    </div>
+
+    <div class="q-block">
+      <label><strong>Q3.</strong> How confident are you that your layout is <em>physically good</em>? (1 = not confident, 10 = very confident)</label>
+      <div class="scale-row">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)">1</span>
+        <input type="range" min="1" max="10" value="5" id="qC-phys" oninput="document.getElementById('qC-phys-val').textContent=this.value">
+        <span style="font-size:11px;color:var(--muted);font-family:var(--mono)">10</span>
+        <span class="scale-val" id="qC-phys-val">5</span>
+      </div>
+      <div class="scale-ends"><span>not confident</span><span>very confident</span></div>
+    </div>
+
+    <div class="q-block">
+      <label><strong>Q4.</strong> How did this task compare to the previous one in difficulty?</label>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-top:.4rem;">
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#bcc4d8;margin:0"><input type="radio" name="qC-diff" value="much_easier"> Much easier</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#bcc4d8;margin:0"><input type="radio" name="qC-diff" value="slightly_easier"> Slightly easier</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#bcc4d8;margin:0"><input type="radio" name="qC-diff" value="same"> About the same</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#bcc4d8;margin:0"><input type="radio" name="qC-diff" value="slightly_harder"> Slightly harder</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#bcc4d8;margin:0"><input type="radio" name="qC-diff" value="much_harder" checked> Much harder</label>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <label><strong>Q5.</strong> Any other comments? (optional)</label>
+      <textarea id="qC-comment" placeholder="Optional comments..."></textarea>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;margin-top:.5rem;">
+      <button class="btn btn-primary" onclick="saveQuestionnaire('C');goTo('page-solution-hard')">See reference solution &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ HARD SOLUTION PAGE ═══ -->
+<div id="page-solution-hard" class="page">
+  <div class="nav">
+    <div class="nav-logo">Hard task — reference solution</div>
+    <div class="steps">
+      <div class="sdot done"></div><div class="sdot done"></div><div class="sdot done"></div>
+      <div class="sdot done"></div><div class="sdot done"></div><div class="sdot done"></div>
+      <div class="sdot done"></div><div class="sdot done"></div><div class="sdot active"></div>
+    </div>
+  </div>
+  <div class="scroll-body" style="max-width:900px;">
+    <h1 style="margin-bottom:.3rem;">Reference solution — hard task</h1>
+    <p class="tagline">Compare this to your design. Thank you for completing the study.</p>
+    <div class="isec">
+      <h2>Correct layout</h2>
+      <img src="https://raw.githubusercontent.com/jor0214/Power-Module-Benchmark-Suite/main/UserStudy_Images/layout_D.png" alt="Hard task reference solution" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin-bottom:1rem;">
+    </div>
+    <div class="isec">
+      <h2>Key things to notice</h2>
+      <div class="callout" style="margin-bottom:.8rem;">
+        <strong>Mirrored devices require careful reading.</strong> U2 (left) and U1 (right) face opposite directions — their drain and source pads are on opposite sides compared to the previous layouts. The schematic is the only reliable guide to which plane each device belongs to.
+      </div>
+      <div class="callout" style="margin-bottom:.8rem;">
+        <strong>DCP and DCN connectors are on the same side.</strong> Both are on the left edge, which means the DCP plane must reach across to U1 on the right, while DCN stays local to U2 on the left. This is the non-obvious part of the layout.
+      </div>
+      <div class="callout">
+        <strong>The AC plane is the largest.</strong> It must bridge the midpoint between U1 source and U2 drain, connecting to the AC connectors on the right side of the board.
+      </div>
+    </div>
+  </div>
+  <div class="page-footer">
+    <button class="btn btn-green" onclick="finalSubmit()">Submit and finish &#10003;</button>
+  </div>
+</div>
+
+</body>
+</html>
