@@ -490,21 +490,22 @@
           <p>Apply your copper plane synthesis method across any or all cases. Compare against reference L, R, C and RTH values in <code>/results/summary.csv</code>. Inductance (L-AC) is the primary performance metric.</p>
         </div>
       </div>
-      <div class="step">
-        <div class="step-num">6</div>
-        <div class="step-body">
-          <h3>File structure guide</h3>
-          <p>Each case folder follows a consistent structure. Replace <code>Case_XX</code> with the relevant case number (e.g. <code>Case_01</code>).</p>
-          <table class="data-table" style="margin-top:12px;">
-            <tr class="section-header"><td colspan="2">File locations</td></tr>
-            <tr><td>Schematic (Xpedition Designer)</td><td><code>Case_XX/Case_XX.prj</code></td></tr>
-            <tr><td>Layout (Xpedition Layout)</td><td><code>Case_XX/PCB/Case_XX.pcb</code></td></tr>
-            <tr><td>3D Model (STEP)</td><td><code>Case_XX/PCB/Output/Case_XX.step</code></td></tr>
-            <tr><td>Parasitic Extraction (HyperLynx)</td><td><code>Case_XX/PCB/Output/Case_XX.phys</code></td></tr>
-            <tr><td>Thermal Simulation (FloEFD)</td><td><code>Case_XX/PCB/Output/Thermal/Case_XX_step.prt</code></td></tr>
-          </table>
-        </div>
-      </div>
+    </div>
+    <div class="section-label" style="margin-top:48px;">File Structure</div>
+    <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:8px;margin-top:12px;">Locating files within each case folder</h3>
+    <p style="color:var(--text-dim);font-size:13px;margin-bottom:16px;">Each case folder follows a consistent structure. Replace <code>Case_X</code> with the relevant case number (e.g. <code>Case_1</code>).</p>
+    <table class="data-table" style="max-width:700px;">
+      <tr class="section-header"><td colspan="2">File locations</td></tr>
+      <tr><td>Schematic (Xpedition Designer)</td><td><code>Case_X/Case_X.prj</code></td></tr>
+      <tr><td>Layout (Xpedition Layout)</td><td><code>Case_X/PCB/Case_X.pcb</code></td></tr>
+      <tr><td>3D Model (STEP)</td><td><code>Case_X/PCB/Output/Case_X.step</code></td></tr>
+      <tr><td>Parasitic Extraction (HyperLynx)</td><td><code>Case_X/PCB/Output/Case_X.phys</code></td></tr>
+      <tr><td>Thermal Simulation (FloEFD)</td><td><code>Case_X/PCB/Output/Thermal/Case_X_step.prt</code></td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- DOWNLOAD -->
 <section id="download">
   <div class="container">
     <div class="section-label">Dataset</div>
